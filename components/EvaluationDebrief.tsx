@@ -105,7 +105,7 @@ export default function EvaluationDebrief({
 
   const handleDownloadJsonReport = () => {
     const payload = {
-      platform: 'AegisSim B2B Assessment Report',
+      platform: 'MiraStudio B2B Assessment Report',
       scenarioTitle: scenario.title,
       moduleType: scenario.moduleType,
       sessionId: session.id,
@@ -118,7 +118,7 @@ export default function EvaluationDebrief({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `aegissim-audit-${session.id}.json`;
+    a.download = `mirastudio-audit-${session.id}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };

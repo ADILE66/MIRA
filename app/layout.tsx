@@ -21,18 +21,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'AegisSim — Simulateur Tactique B2B & Serious Games IA',
+  title: 'MiraStudio — Simulateur Tactique B2B & Serious Games IA',
   description:
     "Plateforme SaaS B2B de simulation professionnelle assistée par IA combinant un Moteur d'État déterministe, un Moteur Narratif multi-personas, une base documentaire RAG et un Agent Évaluateur.",
   openGraph: {
-    title: 'AegisSim — Simulateur Tactique B2B & Serious Games IA',
+    title: 'MiraStudio — Simulateur Tactique B2B & Serious Games IA',
     description:
       "Plateforme SaaS B2B de simulation professionnelle assistée par IA combinant un Moteur d'État déterministe, un Moteur Narratif multi-personas, une base documentaire RAG et un Agent Évaluateur.",
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AegisSim — Simulateur Tactique B2B & Serious Games IA',
+    title: 'MiraStudio — Simulateur Tactique B2B & Serious Games IA',
     description:
       "Plateforme SaaS B2B de simulation professionnelle assistée par IA combinant un Moteur d'État déterministe, un Moteur Narratif multi-personas, une base documentaire RAG et un Agent Évaluateur.",
   },

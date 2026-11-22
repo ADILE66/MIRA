@@ -22,7 +22,7 @@ export interface DatabaseHealthInfo {
 }
 
 /**
- * Enterprise Database Repository for AegisSim B2B
+ * Enterprise Database Repository for MiraStudio B2B
  * Handles data access with multi-tenant scoping and seamless support for:
  * 1. Supabase / PostgreSQL (via REST or SQL connection when SUPABASE_URL / DATABASE_URL is set)
  * 2. Enterprise In-Memory / Local Storage Fallback with seed data preservation

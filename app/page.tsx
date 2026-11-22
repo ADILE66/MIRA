@@ -33,7 +33,7 @@ import {
 
 type MainView = 'catalog' | 'cockpit' | 'studio' | 'debrief' | 'architecture';
 
-export default function AegisSimPlatformPage() {
+export default function MiraStudioPlatformPage() {
   const [activeView, setActiveView] = useState<MainView>('catalog');
   const [selectedModuleFilter, setSelectedModuleFilter] = useState<
     'all' | ModuleType
@@ -160,7 +160,7 @@ export default function AegisSimPlatformPage() {
           onClick={() => setActiveView('catalog')}
           className="text-lg font-bold tracking-tight text-white font-display whitespace-nowrap shrink-0 cursor-pointer"
         >
-          AegisSim
+          MiraStudio
         </button>
 
         {/* Zone 2: 4-5 clean single-line text navigation links */}
@@ -639,7 +639,7 @@ export default function AegisSimPlatformPage() {
       <footer className="px-6 py-5 border-t border-slate-800/80 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-slate-300 font-display">
-            AegisSim
+            MiraStudio
           </span>
           <span aria-hidden="true">·</span>
           <span>

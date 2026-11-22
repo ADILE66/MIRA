@@ -11,7 +11,7 @@
  */
 
 export const POSTGRES_MULTI_TENANT_DDL = `-- ============================================================================
--- AEGISSIM B2B — SCHÉMA POSTGRESQL MULTI-TENANT (DRIZZLE ORM / SUPABASE)
+-- MIRASTUDIO B2B — SCHÉMA POSTGRESQL MULTI-TENANT (DRIZZLE ORM / SUPABASE)
 -- ============================================================================
 
 CREATE TYPE module_type AS ENUM ('upskilling', 'business_game', 'recruitment', 'onboarding');

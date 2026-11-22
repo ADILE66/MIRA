@@ -33,7 +33,7 @@ export function resolveAuthContext(req: NextRequest): AuthContext {
         const payload = JSON.parse(payloadJson);
         const orgId = payload.organization_id || payload.org_id || tenantHeader || INITIAL_ORGANIZATIONS[0].id;
         const uid = payload.sub || payload.uid || 'usr-jwt-user';
-        const email = payload.email || 'user@aegissim.com';
+        const email = payload.email || 'user@mirastudio.com';
         const role = payload.role || 'Candidat / Apprenant';
 
         return {

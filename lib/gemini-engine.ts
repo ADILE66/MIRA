@@ -223,7 +223,7 @@ export async function executeNarrativeTurnWithFunctionCalling(params: {
     )
     .join('\n\n');
 
-  const systemInstruction = `Tu es le Moteur Narratif et Comportemental d'AegisSim, le simulateur B2B pour équipes en entreprise.
+  const systemInstruction = `Tu es le Moteur Narratif et Comportemental de MiraStudio, le simulateur B2B pour équipes en entreprise.
 Tu incarnes le persona suivant avec un réalisme professionnel absolu :
 - Nom : ${currentState.personaState.name}
 - Rôle : ${currentState.personaState.role} (${currentState.personaState.company})
@@ -377,7 +377,7 @@ Audit RAG: ${t.ragAssessment ? `${t.ragAssessment.status} (${t.ragAssessment.rul
     .map((c) => `- [${c.id}] ${c.title}: ${c.mandatoryRule}`)
     .join('\n');
 
-  const prompt = `Tu es l'Agent Évaluateur B2B d'AegisSim. Analyse cette session de simulation professionnelle et produis un rapport d'audit complet, objectif et exigeant en français.
+  const prompt = `Tu es l'Agent Évaluateur B2B de MiraStudio. Analyse cette session de simulation professionnelle et produis un rapport d'audit complet, objectif et exigeant en français.
 
 SCÉNARIO : ${scenario.title} (Module: ${scenario.moduleType})
 OBJECTIFS : ${scenario.objectives.join(' | ')}
@@ -524,7 +524,7 @@ export async function generateCustomScenarioFromRag(params: {
 }): Promise<ScenarioDefinition> {
   const ai = getAiClient();
 
-  const prompt = `Tu es l'Architecte de Simulation B2B d'AegisSim Maroc.
+  const prompt = `Tu es l'Architecte de Simulation B2B de MiraStudio.
 Crée un scénario de simulation complet, ancré dans le marché marocain (entreprises à Casablanca, Rabat, Tanger Med, budgets en Dirhams MAD / kMAD, réglementation marocaine Loi 69-21, CNDP Loi 09-08, DGSSI, Code du Travail marocain) et basé sur le document interne suivant :
 TITRE DU DOCUMENT RAG : ${params.documentTitle}
 CONTENU DU DOCUMENT :

@@ -1,20 +1,49 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# MiraStudio — Simulateur Tactique B2B & Serious Games IA
 
-# Run and deploy your AI Studio app
+**MiraStudio** est une plateforme SaaS B2B d'entraînement et d'évaluation décisionnelle assistée par IA. Elle repose sur un **moteur de simulation hybride** combinant un **Moteur d'État déterministe** (zéro hallucination chiffrée), un **Moteur Narratif multi-personas** (Gemini avec Function Calling), une base documentaire **RAG en temps réel** et un **Agent Évaluateur structuré**.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/3c29b7a5-2e31-466d-b8c5-b39f346c90c7
+## 4 Modules Métiers
 
-## Run Locally
+1. **Formation & Upskilling (`upskilling`) :** Jeux de rôle (vente, négociation, management, cybersécurité) face à des personas IA adaptatifs dont l'humeur évolue dynamiquement.
+2. **Simulation Stratégique / Business Game (`business_game`) :** Pilotage d'une entreprise ou BU sur plusieurs trimestres virtuels (budgets, BFR, trésorerie, pricing) avec imprévus de marché générés par l'IA.
+3. **Recrutement / Gamified Assessment (`recruitment`) :** Mises en situation chronométrées (20–30 min) pour évaluer les réflexes et soft skills des candidats sans triche possible (protection anti-jailbreak et calculs hermétiques côté serveur).
+4. **Onboarding & Conduite du Changement (`onboarding`) :** Parcours gamifiés basés sur les procédures et réglementations internes de l'entreprise.
 
-**Prerequisites:**  Node.js
+---
 
+## Architecture Hybride
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+* **Pilier 1 — Moteur d'État Déterministe (`lib/state-engine.ts`) :** Réducteur TypeScript pur garantissant l'intégrité absolue des métriques (Trésorerie, ARR, Marge EBITDA, Churn, Confiance).
+* **Pilier 2 — Moteur Narratif & Décisionnel IA (`lib/gemini-engine.ts`) :** Function Calling strict (`recordSimulationTurnImpact`) forçant la séparation entre discours incarné et deltas de KPIs.
+* **Pilier 3 — Audit RAG en Temps Réel (`lib/rag-engine.ts`) :** Ingestion de documents internes (PDF, Markdown) et audit systématique du respect (`RESPECTED`) ou violation (`VIOLATED`) des règles métier.
+* **Architecture Multi-Tenant & Mode Marque Blanche :** Prise en charge des ETI, PME, Directions RH et Cabinets de Conseil (compatibilité PostgreSQL / Supabase RLS).
+
+---
+
+## Démarrage Rapide
+
+### Prérequis
+* Node.js v18+ (recommandé v20+)
+* Clé API Google Gemini (`GEMINI_API_KEY`)
+
+### Installation & Lancement
+
+```bash
+# 1. Cloner le dépôt
+git clone https://github.com/ADILE66/MIRA.git
+cd MIRA
+
+# 2. Installer les dépendances
+npm install
+
+# 3. Configurer les variables d'environnement
+cp .env.example .env.local
+# Définir votre GEMINI_API_KEY dans .env.local
+
+# 4. Lancer le serveur de développement
+npm run dev
+```
+
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
