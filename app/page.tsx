@@ -25,6 +25,7 @@ import StudioRagBuilder from '@/components/StudioRagBuilder';
 import EvaluationDebrief from '@/components/EvaluationDebrief';
 import ArchitectureBlueprintView from '@/components/ArchitectureBlueprintView';
 import LandingPageView from '@/components/LandingPageView';
+import PricingView from '@/components/PricingView';
 import {
   Play,
   Clock,
@@ -36,7 +37,14 @@ import {
   Award,
 } from 'lucide-react';
 
-type MainView = 'landing' | 'catalog' | 'cockpit' | 'studio' | 'debrief' | 'architecture';
+type MainView =
+  | 'landing'
+  | 'catalog'
+  | 'cockpit'
+  | 'studio'
+  | 'debrief'
+  | 'pricing'
+  | 'architecture';
 
 export default function MiraStudioPlatformPage() {
   const [activeView, setActiveView] = useState<MainView>('landing');
@@ -195,6 +203,7 @@ export default function MiraStudioPlatformPage() {
             { id: 'cockpit', label: 'Cockpit Simulation' },
             { id: 'studio', label: 'Studio RAG' },
             { id: 'debrief', label: 'Évaluations' },
+            { id: 'pricing', label: 'Tarifs' },
             { id: 'architecture', label: 'Marque Blanche & RLS' },
           ].map((item) => {
             const isActive = activeView === item.id;
@@ -255,6 +264,7 @@ export default function MiraStudioPlatformPage() {
             }}
             onNavigateToStudio={() => setActiveView('studio')}
             onNavigateToArchitecture={() => setActiveView('architecture')}
+            onNavigateToPricing={() => setActiveView('pricing')}
             scenarios={scenarios}
             activeOrg={activeOrg}
           />
@@ -671,7 +681,17 @@ export default function MiraStudioPlatformPage() {
             );
           })()}
 
-        {/* VIEW 5: MULTI-TENANT ARCHITECTURE & POSTGRESQL DDL BLUEPRINT */}
+        {/* VIEW 5: PRICING & B2B SUBSCRIPTION PLANS */}
+        {activeView === 'pricing' && (
+          <PricingView
+            onStartSimulation={handleStartSimulation}
+            onNavigateToCatalog={() => setActiveView('catalog')}
+            onNavigateToArchitecture={() => setActiveView('architecture')}
+            flagshipScenario={scenarios[0]}
+          />
+        )}
+
+        {/* VIEW 6: MULTI-TENANT ARCHITECTURE & POSTGRESQL DDL BLUEPRINT */}
         {activeView === 'architecture' && (
           <ArchitectureBlueprintView
             postgresSchemaDdl={postgresSchemaDdl}
@@ -718,9 +738,15 @@ export default function MiraStudioPlatformPage() {
           </button>
           <button
             onClick={() => setActiveView('debrief')}
-            className="hover:text-light-primary transition-colors cursor-pointer text-light-primary font-bold"
+            className="hover:text-light-primary transition-colors cursor-pointer"
           >
             Évaluations & Bilan
+          </button>
+          <button
+            onClick={() => setActiveView('pricing')}
+            className="hover:text-light-primary transition-colors cursor-pointer text-light-primary font-bold"
+          >
+            Tarifs
           </button>
           <button
             onClick={() => setActiveView('architecture')}

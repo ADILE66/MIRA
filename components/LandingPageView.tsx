@@ -37,6 +37,7 @@ interface LandingPageViewProps {
   onNavigateToCatalog: (moduleFilter?: ModuleType) => void;
   onNavigateToStudio: () => void;
   onNavigateToArchitecture: () => void;
+  onNavigateToPricing?: () => void;
   scenarios: ScenarioDefinition[];
   activeOrg: OrganizationTenant;
 }
@@ -46,6 +47,7 @@ export default function LandingPageView({
   onNavigateToCatalog,
   onNavigateToStudio,
   onNavigateToArchitecture,
+  onNavigateToPricing,
   scenarios,
   activeOrg,
 }: LandingPageViewProps) {
@@ -884,10 +886,13 @@ export default function LandingPageView({
             </div>
 
             <button
-              onClick={() => onStartSimulation(scenarioUpskilling)}
-              className="w-full py-3.5 text-xs font-bold text-[#002C76] bg-white hover:bg-slate-100 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              onClick={() => {
+                if (onNavigateToPricing) onNavigateToPricing();
+                else onStartSimulation(scenarioUpskilling);
+              }}
+              className="w-full py-3.5 text-xs font-bold text-[#002C76] bg-white hover:bg-slate-100 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-98"
             >
-              <span>Déployer ce modèle pour votre organisation</span>
+              <span>Consulter les Tarifs & Forfaits Déployés</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
