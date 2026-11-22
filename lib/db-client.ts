@@ -22,6 +22,7 @@ export interface DatabaseHealthInfo {
   status: 'healthy' | 'degraded';
   provider: 'neon_postgres' | 'hybrid_repository';
   isExternalDbConfigured: boolean;
+  detectedConnectionStringKey?: string;
   activeTenantsCount: number;
   knowledgeDocsCount: number;
   scenariosCount: number;
@@ -30,13 +31,26 @@ export interface DatabaseHealthInfo {
   schemaVersion: string;
 }
 
+function getDatabaseKeyAndUrl(): { key: string; url: string } | null {
+  if (process.env.DATABASE_URL) return { key: 'DATABASE_URL', url: process.env.DATABASE_URL };
+  if (process.env.POSTGRES_URL) return { key: 'POSTGRES_URL', url: process.env.POSTGRES_URL };
+  if (process.env.POSTGRES_PRISMA_URL) return { key: 'POSTGRES_PRISMA_URL', url: process.env.POSTGRES_PRISMA_URL };
+  if (process.env.POSTGRES_URL_NON_POOLING) return { key: 'POSTGRES_URL_NON_POOLING', url: process.env.POSTGRES_URL_NON_POOLING };
+  if (process.env.NEON_DATABASE_URL) return { key: 'NEON_DATABASE_URL', url: process.env.NEON_DATABASE_URL };
+  if (process.env.NEON_URL) return { key: 'NEON_URL', url: process.env.NEON_URL };
+
+  // Scan all process.env for any PostgreSQL connection string injected by Vercel integrations
+  for (const [key, value] of Object.entries(process.env)) {
+    if (typeof value === 'string' && (value.startsWith('postgres://') || value.startsWith('postgresql://'))) {
+      return { key, url: value };
+    }
+  }
+
+  return null;
+}
+
 function getDatabaseUrl(): string | undefined {
-  return (
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL ||
-    process.env.POSTGRES_PRISMA_URL ||
-    process.env.POSTGRES_URL_NON_POOLING
-  );
+  return getDatabaseKeyAndUrl()?.url;
 }
 
 /**
@@ -211,7 +225,8 @@ export class DatabaseRepository {
   // --- HEALTH & TELEMETRY ---
   public async getHealth(): Promise<DatabaseHealthInfo> {
     const store = getStore();
-    const isConfigured = Boolean(getDatabaseUrl());
+    const dbInfo = getDatabaseKeyAndUrl();
+    const isConfigured = Boolean(dbInfo?.url);
     const sql = this.getClient();
 
     if (sql && isConfigured) {
@@ -228,6 +243,7 @@ export class DatabaseRepository {
           status: 'healthy',
           provider: 'neon_postgres',
           isExternalDbConfigured: true,
+          detectedConnectionStringKey: dbInfo?.key,
           activeTenantsCount: orgsCount[0]?.count || store.organizations.length,
           knowledgeDocsCount: docsCount[0]?.count || store.knowledgeDocuments.length,
           scenariosCount: scenCount[0]?.count || store.scenarios.length,
@@ -244,6 +260,7 @@ export class DatabaseRepository {
       status: 'healthy',
       provider: 'hybrid_repository',
       isExternalDbConfigured: isConfigured,
+      detectedConnectionStringKey: dbInfo?.key || 'none',
       activeTenantsCount: store.organizations.length,
       knowledgeDocsCount: store.knowledgeDocuments.length,
       scenariosCount: store.scenarios.length,
