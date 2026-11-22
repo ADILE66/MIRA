@@ -20,6 +20,7 @@ import SimulationCockpit from '@/components/SimulationCockpit';
 import StudioRagBuilder from '@/components/StudioRagBuilder';
 import EvaluationDebrief from '@/components/EvaluationDebrief';
 import ArchitectureBlueprintView from '@/components/ArchitectureBlueprintView';
+import LandingPageView from '@/components/LandingPageView';
 import {
   Play,
   Clock,
@@ -31,10 +32,10 @@ import {
   Award,
 } from 'lucide-react';
 
-type MainView = 'catalog' | 'cockpit' | 'studio' | 'debrief' | 'architecture';
+type MainView = 'landing' | 'catalog' | 'cockpit' | 'studio' | 'debrief' | 'architecture';
 
 export default function MiraStudioPlatformPage() {
-  const [activeView, setActiveView] = useState<MainView>('catalog');
+  const [activeView, setActiveView] = useState<MainView>('landing');
   const [selectedModuleFilter, setSelectedModuleFilter] = useState<
     'all' | ModuleType
   >('all');
@@ -157,23 +158,38 @@ export default function MiraStudioPlatformPage() {
       <header className="flex items-center justify-between gap-8 px-6 py-4 border-b border-slate-800 bg-[#0B0F17]/95 sticky top-0 z-30 backdrop-blur-md">
         {/* Zone 1: Single text element wordmark */}
         <button
-          onClick={() => setActiveView('catalog')}
-          className="text-lg font-bold tracking-tight text-white font-display whitespace-nowrap shrink-0 cursor-pointer"
+          onClick={() => setActiveView('landing')}
+          className="flex items-center gap-2.5 text-left cursor-pointer group"
         >
-          MiraStudio
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 flex items-center justify-center text-white font-bold text-xs shadow-md shadow-blue-500/20">
+            M
+          </div>
+          <span className="text-lg font-bold tracking-tight text-white font-display whitespace-nowrap shrink-0 group-hover:text-blue-300 transition-colors">
+            MiraStudio
+          </span>
         </button>
 
         {/* Zone 2: 4-5 clean single-line text navigation links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
           <button
-            onClick={() => setActiveView('catalog')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
-              activeView === 'catalog'
-                ? 'text-white underline underline-offset-8 decoration-blue-500'
+            onClick={() => setActiveView('landing')}
+            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              activeView === 'landing'
+                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
                 : ''
             }`}
           >
-            Modules
+            Accueil
+          </button>
+          <button
+            onClick={() => setActiveView('catalog')}
+            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              activeView === 'catalog'
+                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
+                : ''
+            }`}
+          >
+            Catalogue
           </button>
           <button
             onClick={() => {
@@ -183,9 +199,9 @@ export default function MiraStudioPlatformPage() {
                 handleStartSimulation(scenarios[0]);
               }
             }}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               activeView === 'cockpit'
-                ? 'text-white underline underline-offset-8 decoration-blue-500'
+                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
                 : ''
             }`}
           >
@@ -193,9 +209,9 @@ export default function MiraStudioPlatformPage() {
           </button>
           <button
             onClick={() => setActiveView('studio')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               activeView === 'studio'
-                ? 'text-white underline underline-offset-8 decoration-blue-500'
+                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
                 : ''
             }`}
           >
@@ -209,9 +225,9 @@ export default function MiraStudioPlatformPage() {
                 setActiveView('architecture');
               }
             }}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               activeView === 'debrief'
-                ? 'text-white underline underline-offset-8 decoration-blue-500'
+                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
                 : ''
             }`}
           >
@@ -219,9 +235,9 @@ export default function MiraStudioPlatformPage() {
           </button>
           <button
             onClick={() => setActiveView('architecture')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               activeView === 'architecture'
-                ? 'text-white underline underline-offset-8 decoration-blue-500'
+                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
                 : ''
             }`}
           >
@@ -250,6 +266,21 @@ export default function MiraStudioPlatformPage() {
 
       {/* MAIN VIEWPORT CONTENT */}
       <main className="flex-1">
+        {/* VIEW 0: LANDING PAGE */}
+        {activeView === 'landing' && (
+          <LandingPageView
+            onStartSimulation={handleStartSimulation}
+            onNavigateToCatalog={(moduleFilter) => {
+              if (moduleFilter) setSelectedModuleFilter(moduleFilter);
+              setActiveView('catalog');
+            }}
+            onNavigateToStudio={() => setActiveView('studio')}
+            onNavigateToArchitecture={() => setActiveView('architecture')}
+            scenarios={scenarios}
+            activeOrg={activeOrg}
+          />
+        )}
+
         {/* VIEW 1: CATALOG & HERO (1 ENGINE, 4 MODULES) */}
         {activeView === 'catalog' && (
           <div className="max-w-[1440px] mx-auto px-6 py-10 space-y-12">
@@ -649,20 +680,26 @@ export default function MiraStudioPlatformPage() {
         </div>
         <div className="flex items-center gap-4">
           <button
+            onClick={() => setActiveView('landing')}
+            className="hover:text-slate-300 transition-colors cursor-pointer"
+          >
+            Accueil (Landing Page)
+          </button>
+          <button
             onClick={() => setActiveView('catalog')}
-            className="hover:text-slate-300 transition-colors"
+            className="hover:text-slate-300 transition-colors cursor-pointer"
           >
             Catalogue des 4 Modules
           </button>
           <button
             onClick={() => setActiveView('studio')}
-            className="hover:text-slate-300 transition-colors"
+            className="hover:text-slate-300 transition-colors cursor-pointer"
           >
             Studio RAG
           </button>
           <button
             onClick={() => setActiveView('architecture')}
-            className="hover:text-slate-300 transition-colors"
+            className="hover:text-slate-300 transition-colors cursor-pointer"
           >
             Schéma Multi-Tenant PostgreSQL
           </button>
