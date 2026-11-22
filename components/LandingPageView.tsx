@@ -169,10 +169,11 @@ export default function LandingPageView({
           </div>
 
           {/* Main Title with Executive Typography */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-light-on-surface font-headline max-w-5xl leading-[1.12]">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-light-on-surface font-headline max-w-5xl leading-[1.15]">
             Le simulateur de vol décisionnel qui transforme vos documents internes en{' '}
-            <span className="bg-gradient-to-r from-light-primary via-[#1B4396] to-light-secondary bg-clip-text text-transparent underline decoration-light-secondary-container decoration-wavy underline-offset-8">
+            <span className="text-light-primary relative inline-block">
               réflexes d’excellence
+              <span className="absolute bottom-1 left-0 w-full h-[6px] bg-light-primary/15 rounded-full -z-10" />
             </span>.
           </h1>
 
