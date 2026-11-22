@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { UserProfile, OrganizationTenant } from '@/lib/types';
 import { DEMO_ENTERPRISE_PERSONAS, DemoEnterprisePersona } from '@/lib/auth';
+import MiraLogo from '@/components/MiraLogo';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -160,11 +161,7 @@ export default function AuthModal({
         {/* Top Header */}
         <div className="px-6 py-4 bg-light-surface-container-low border-b border-light-outline-variant flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center font-bold text-sm shadow-xs">
-              <span className="material-symbols-outlined text-lg" aria-hidden="true">
-                lock
-              </span>
-            </div>
+            <MiraLogo size={32} />
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-light-on-surface font-headline tracking-tight">

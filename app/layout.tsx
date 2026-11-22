@@ -24,6 +24,11 @@ export const metadata: Metadata = {
   title: 'MiraStudio — Simulateur Tactique B2B & Serious Games IA',
   description:
     "Plateforme SaaS B2B de simulation professionnelle assistée par IA combinant un Moteur d'État déterministe, un Moteur Narratif multi-personas, une base documentaire RAG et un Agent Évaluateur.",
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/logo.svg',
+  },
   openGraph: {
     title: 'MiraStudio — Simulateur Tactique B2B & Serious Games IA',
     description:

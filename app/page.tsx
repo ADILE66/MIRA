@@ -27,6 +27,7 @@ import ArchitectureBlueprintView from '@/components/ArchitectureBlueprintView';
 import LandingPageView from '@/components/LandingPageView';
 import PricingView from '@/components/PricingView';
 import AuthModal from '@/components/AuthModal';
+import MiraLogo from '@/components/MiraLogo';
 import { DEMO_ENTERPRISE_PERSONAS, DemoEnterprisePersona } from '@/lib/auth';
 import {
   Play,
@@ -295,9 +296,7 @@ export default function MiraStudioPlatformPage() {
             onClick={() => setActiveView('landing')}
             className="flex items-center gap-3 text-left cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center font-bold text-sm shadow-xs group-hover:bg-light-primary-container transition-colors">
-              <span className="material-symbols-outlined text-lg" aria-hidden="true">flight_takeoff</span>
-            </div>
+            <MiraLogo size={32} className="group-hover:scale-105 transition-transform shadow-xs" />
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-headline text-lg font-bold text-light-on-surface tracking-tight">
@@ -1044,9 +1043,7 @@ export default function MiraStudioPlatformPage() {
       {/* Clean Corporate Footer — Stitch Design System */}
       <footer className="bg-light-surface-container-lowest border-t border-light-outline-variant px-6 py-4 text-xs text-light-on-surface-variant flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded bg-light-primary text-light-on-primary flex items-center justify-center text-[10px]">
-            <span className="material-symbols-outlined text-xs">flight_takeoff</span>
-          </div>
+          <MiraLogo size={22} className="shadow-2xs" />
           <span className="font-bold text-light-on-surface font-headline">
             MiraStudio
           </span>
