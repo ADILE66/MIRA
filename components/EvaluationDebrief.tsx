@@ -23,6 +23,17 @@ interface EvaluationDebriefProps {
   report: EvaluationReport;
   onRestartScenario: () => void;
   onBackToCatalog: () => void;
+  availableEvaluations?: Array<{
+    session: SimulationSession;
+    scenario: ScenarioDefinition;
+    report: EvaluationReport;
+    candidateName: string;
+  }>;
+  onSelectEvaluation?: (
+    session: SimulationSession,
+    scenario: ScenarioDefinition,
+    report: EvaluationReport
+  ) => void;
 }
 
 export default function EvaluationDebrief({
@@ -31,6 +42,8 @@ export default function EvaluationDebrief({
   report,
   onRestartScenario,
   onBackToCatalog,
+  availableEvaluations,
+  onSelectEvaluation,
 }: EvaluationDebriefProps) {
   const [selectedAxisIndex, setSelectedAxisIndex] = useState<number>(0);
 
@@ -141,6 +154,46 @@ export default function EvaluationDebrief({
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8 bg-light-surface text-light-on-surface">
+      {/* Assessment Campaign / Evaluation Selector Bar */}
+      {availableEvaluations && availableEvaluations.length > 1 && (
+        <div className="p-3 bg-light-surface-container-low border border-light-outline-variant rounded-xl flex flex-wrap items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-light-primary">
+            <ShieldCheck className="w-4 h-4 text-light-primary" />
+            <span>CENTRE D’ÉVALUATION · BILANS CERTIFIÉS DISPONIBLES :</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {availableEvaluations.map((item) => {
+              const isCurrent = item.session.id === session.id;
+              return (
+                <button
+                  key={item.session.id}
+                  onClick={() =>
+                    onSelectEvaluation &&
+                    onSelectEvaluation(item.session, item.scenario, item.report)
+                  }
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 shadow-2xs ${
+                    isCurrent
+                      ? 'bg-light-primary text-white shadow-xs'
+                      : 'bg-light-surface-container-lowest text-light-on-surface-variant hover:text-light-on-surface hover:bg-light-surface-container border border-light-outline-variant'
+                  }`}
+                >
+                  <span>{item.candidateName}</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${
+                      isCurrent
+                        ? 'bg-white/20 text-white'
+                        : 'bg-light-surface-container text-light-primary'
+                    }`}
+                  >
+                    {item.report.overallScore}/100
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Header Bar — Stitch Report Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-light-outline-variant">
         <div className="space-y-2">

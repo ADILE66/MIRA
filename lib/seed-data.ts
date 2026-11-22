@@ -4,6 +4,7 @@ import {
   KnowledgeDocument,
   ScenarioDefinition,
   SimulationSession,
+  EvaluationReport,
 } from './types';
 
 export const INITIAL_ORGANIZATIONS: OrganizationTenant[] = [
@@ -994,6 +995,187 @@ export const INITIAL_SCENARIOS: ScenarioDefinition[] = [
   },
 ];
 
+// Sample Evaluation Report for Demo & Immediate Hub Inspection
+export const SAMPLE_EVALUATION_REPORT: EvaluationReport = {
+  generatedAt: '2026-11-22T20:15:00Z',
+  modelUsed: 'gemini-2.5-flash (Agent Évaluateur Certifié)',
+  overallScore: 88,
+  verdict: 'CERTIFIED_EXCELLENCE',
+  ragComplianceScore: 94,
+  executiveSummary:
+    "Excellente maîtrise opérationnelle des leviers contractuels et réglementaires. Le candidat a su neutraliser l'agressivité du DSI de Maghreb Fret sans céder au chantage de la remise de 30% ni accepter l'infraction à la Loi 69-21 (délai 120 jours refusé avec fermeté et courtoisie). La compensation par valeur technique (détachement de l'Architecte 48h sur site Tanger Med et Support Platinum 6 mois) a permis de préserver la marge brute à 40,0% tout en restaurant le score de confiance client à 68/100.",
+  competencyRadar: [
+    {
+      axisId: 'rag',
+      label: 'Conformité RAG & Lois',
+      score: 94,
+      benchmark: 80,
+      justification:
+        "Respect strict du plafond d'avoir 10% et maintien du délai 60j conforme à l'article 78-2 de la Loi 69-21.",
+    },
+    {
+      axisId: 'finance',
+      label: 'Préservation Marge & P&L',
+      score: 88,
+      benchmark: 75,
+      justification:
+        'Marge brute contrat maintenue à 40% (au-dessus du seuil cible de 35%).',
+    },
+    {
+      axisId: 'posture',
+      label: 'Leadership & Négociation',
+      score: 85,
+      benchmark: 70,
+      justification:
+        "Désamorçage progressif de l'agressivité du persona adverse sans posture défensive.",
+    },
+    {
+      axisId: 'stress',
+      label: 'Sang-froid & Timing',
+      score: 82,
+      benchmark: 65,
+      justification:
+        'Prise de décision rapide dans le temps imparti sans précipitation.',
+    },
+    {
+      axisId: 'impact',
+      label: 'Impact Décisionnel',
+      score: 91,
+      benchmark: 75,
+      justification:
+        'Activation judicieuse du levier technique créateur de valeur sur site.',
+    },
+  ],
+  criticalMoments: [
+    {
+      turnNumber: 2,
+      userQuote:
+        "« Nous comprenons l'urgence portuaire à Tanger Med. En revanche, la Loi 69-21 interdit formellement un délai de paiement à 120 jours. Nous maintenons l'échéance légale à 60 jours tout en étudiant un avoir plafonné. »",
+      impactType: 'POSITIVE_BREAKTHROUGH',
+      kpiImpactSummary: 'Confiance +12 pts, Conformité DGI 100%',
+      analysis:
+        'Refus net de l’infraction fiscale avec explication légale pédagogique.',
+      recommendedAlternative:
+        'Parfaite application de la clause 1 du Playbook Vente.',
+    },
+    {
+      turnNumber: 4,
+      userQuote:
+        '« Plutôt qu’une remise tarifaire destructrice de 30%, nous détachons sous 48h un Architecte Principal sur votre site d’exploitation et vous offrons 6 mois de Support Platinum 24/7. »',
+      impactType: 'POSITIVE_BREAKTHROUGH',
+      kpiImpactSummary: 'Marge brute -2%, Confiance +18 pts',
+      analysis:
+        'Arbitrage exemplaire remplaçant une destruction de marge par un levier de valeur technique.',
+      recommendedAlternative:
+        'Conforme à la Règle 2 du Playbook Grands Comptes.',
+    },
+    {
+      turnNumber: 5,
+      userQuote:
+        '« Nos équipes d’ingénierie livreront le rapport RCA factuel sous 24h avec le plan de bascule Active-Active sur nos datacenters souverains de Casablanca et Rabat. »',
+      impactType: 'POSITIVE_BREAKTHROUGH',
+      kpiImpactSummary: 'Confiance +15 pts (Total 68/100)',
+      analysis:
+        'Engagement transparent et concret rassurant le DSI face à son propre Comité de Direction.',
+      recommendedAlternative:
+        'Conforme à la directive de souveraineté DGSSI.',
+    },
+  ],
+  actionableTakeaways: [
+    'Maintenir ce niveau d’assertivité face aux tentatives de décalage de paiement à 120 jours (Loi 69-21).',
+    'Systématiser l’usage du levier technique "Architecte sur site" pour protéger le pricing B2B.',
+    'Formaliser l’envoi du rapport RCA certifié dès H+12 pour anticiper le Conseil d’Administration du client.',
+  ],
+};
+
+export const SAMPLE_EVALUATION_SESSION: SimulationSession = {
+  id: 'sim-audit-sample-flagship',
+  scenarioId: 'scen-flagship-crisis-sales',
+  organizationId: 'org-atlas-holding',
+  userId: 'usr-sales-vp',
+  status: 'completed',
+  currentState: JSON.parse(JSON.stringify(INITIAL_SCENARIOS[0].initialState)),
+  turnHistory: [],
+  startedAt: '2026-11-22T19:20:00Z',
+  completedAt: '2026-11-22T19:45:00Z',
+  evaluationReport: SAMPLE_EVALUATION_REPORT,
+};
+
+// Second Sample for Recruitment Assessment
+export const SAMPLE_RECRUITMENT_REPORT: EvaluationReport = {
+  generatedAt: '2026-11-22T18:00:00Z',
+  modelUsed: 'gemini-2.5-flash (Agent Évaluateur Certifié)',
+  overallScore: 92,
+  verdict: 'CERTIFIED_EXCELLENCE',
+  ragComplianceScore: 96,
+  executiveSummary:
+    "Candidat d'un niveau d'assertivité et d'empathie remarquable. Face au risque de départ d'un Tech Lead critique, il a su identifier les facteurs de surcharge cognitive, proposer un aménagement conforme à la charte RH et réaligner la trajectoire produit sans surenchère salariale déstabilisatrice.",
+  competencyRadar: [
+    {
+      axisId: 'rag',
+      label: 'Conformité Charte RH',
+      score: 96,
+      benchmark: 80,
+      justification: 'Application rigoureuse de la politique de mobilité et de bien-être au travail.',
+    },
+    {
+      axisId: 'finance',
+      label: 'Maîtrise Masse Salariale',
+      score: 90,
+      benchmark: 75,
+      justification: 'Gestion responsable sans prime hors budget.',
+    },
+    {
+      axisId: 'posture',
+      label: 'Empathie & Écoute Active',
+      score: 94,
+      benchmark: 70,
+      justification: 'Excellente capacité de désamorçage de la démotivation.',
+    },
+    {
+      axisId: 'stress',
+      label: 'Gestion de Crise RH',
+      score: 88,
+      benchmark: 65,
+      justification: 'Régulation émotionnelle et neutralité exemplaires.',
+    },
+    {
+      axisId: 'impact',
+      label: 'Rétention des Talents',
+      score: 92,
+      benchmark: 75,
+      justification: 'Solution durable validée par les deux parties.',
+    },
+  ],
+  criticalMoments: [
+    {
+      turnNumber: 2,
+      userQuote: "« Je comprends ton épuisement sur la release. Regardons ensemble comment réorganiser la charge plutôt que de prendre une décision hâtive. »",
+      impactType: 'POSITIVE_BREAKTHROUGH',
+      kpiImpactSummary: 'Motivation +22 pts, Risque de départ -35%',
+      analysis: 'Écoute active créant un espace sécurisant pour le collaborateur.',
+      recommendedAlternative: 'Conforme à la démarche QVT.',
+    },
+  ],
+  actionableTakeaways: [
+    'Profil hautement recommandé pour des postes de management technique ou direction de pôle.',
+    'Excellente adéquation culturelle et rigueur managériale.',
+  ],
+};
+
+export const SAMPLE_RECRUITMENT_SESSION: SimulationSession = {
+  id: 'sim-audit-sample-recruitment',
+  scenarioId: 'scen-recruitment-lead-dev',
+  organizationId: 'org-atlas-holding',
+  userId: 'usr-hr-director',
+  status: 'completed',
+  currentState: JSON.parse(JSON.stringify(INITIAL_SCENARIOS[2].initialState)),
+  turnHistory: [],
+  startedAt: '2026-11-22T17:35:00Z',
+  completedAt: '2026-11-22T18:00:00Z',
+  evaluationReport: SAMPLE_RECRUITMENT_REPORT,
+};
+
 // Global server-side persistence store across Next.js route invocations
 interface MultiTenantStore {
   organizations: OrganizationTenant[];
@@ -1014,7 +1196,10 @@ export function getStore(): MultiTenantStore {
       users: [...INITIAL_USERS],
       knowledgeDocuments: [...INITIAL_KNOWLEDGE_DOCUMENTS],
       scenarios: [...INITIAL_SCENARIOS],
-      sessions: {},
+      sessions: {
+        'sim-audit-sample-flagship': SAMPLE_EVALUATION_SESSION,
+        'sim-audit-sample-recruitment': SAMPLE_RECRUITMENT_SESSION,
+      },
     };
   }
   return global._aegisMultiTenantStoreMoroccanV2;

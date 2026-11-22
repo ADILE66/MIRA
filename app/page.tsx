@@ -14,6 +14,10 @@ import {
   INITIAL_USERS,
   INITIAL_KNOWLEDGE_DOCUMENTS,
   INITIAL_SCENARIOS,
+  SAMPLE_EVALUATION_REPORT,
+  SAMPLE_EVALUATION_SESSION,
+  SAMPLE_RECRUITMENT_REPORT,
+  SAMPLE_RECRUITMENT_SESSION,
 } from '@/lib/seed-data';
 import { POSTGRES_MULTI_TENANT_DDL } from '@/lib/db-schema-reference';
 import SimulationCockpit from '@/components/SimulationCockpit';
@@ -58,6 +62,9 @@ export default function MiraStudioPlatformPage() {
 
   const [activeSession, setActiveSession] = useState<SimulationSession | null>(
     null
+  );
+  const [selectedDebriefSession, setSelectedDebriefSession] = useState<SimulationSession>(
+    SAMPLE_EVALUATION_SESSION
   );
   const [isStartingSessionId, setIsStartingSessionId] = useState<string | null>(
     null
@@ -119,6 +126,7 @@ export default function MiraStudioPlatformPage() {
       const data = await response.json();
       if (response.ok && data.session) {
         setActiveSession(data.session);
+        setSelectedDebriefSession(data.session);
         setActiveView('debrief');
       }
     } finally {
@@ -197,9 +205,6 @@ export default function MiraStudioPlatformPage() {
                   if (item.id === 'cockpit') {
                     if (activeSession) setActiveView('cockpit');
                     else handleStartSimulation(scenarios[0]);
-                  } else if (item.id === 'debrief') {
-                    if (activeSession?.evaluationReport) setActiveView('debrief');
-                    else setActiveView('architecture');
                   } else {
                     setActiveView(item.id as MainView);
                   }
@@ -602,17 +607,69 @@ export default function MiraStudioPlatformPage() {
 
         {/* VIEW 4: EVALUATOR AGENT DEBRIEFING & 5-AXIS RADAR */}
         {activeView === 'debrief' &&
-          activeSession &&
-          activeSession.evaluationReport &&
-          activeScenario && (
-            <EvaluationDebrief
-              session={activeSession}
-              scenario={activeScenario}
-              report={activeSession.evaluationReport}
-              onRestartScenario={() => handleStartSimulation(activeScenario)}
-              onBackToCatalog={() => setActiveView('catalog')}
-            />
-          )}
+          (() => {
+            const currentDebriefSession = activeSession?.evaluationReport
+              ? selectedDebriefSession?.id === activeSession.id
+                ? activeSession
+                : selectedDebriefSession || activeSession
+              : selectedDebriefSession || SAMPLE_EVALUATION_SESSION;
+
+            const currentReport =
+              currentDebriefSession.evaluationReport ||
+              SAMPLE_EVALUATION_REPORT;
+            const currentScenario =
+              scenarios.find(
+                (s) => s.id === currentDebriefSession.scenarioId
+              ) || scenarios[0];
+
+            const availableEvaluations = [
+              {
+                session: SAMPLE_EVALUATION_SESSION,
+                scenario:
+                  scenarios.find(
+                    (s) => s.id === SAMPLE_EVALUATION_SESSION.scenarioId
+                  ) || scenarios[0],
+                report: SAMPLE_EVALUATION_REPORT,
+                candidateName:
+                  'Youssef Berrada · Négociation Vente & SLA (69-21)',
+              },
+              {
+                session: SAMPLE_RECRUITMENT_SESSION,
+                scenario:
+                  scenarios.find(
+                    (s) => s.id === SAMPLE_RECRUITMENT_SESSION.scenarioId
+                  ) ||
+                  scenarios[2] ||
+                  scenarios[0],
+                report: SAMPLE_RECRUITMENT_REPORT,
+                candidateName: 'Amine Tazi · Assessment Tech Lead RH',
+              },
+              ...(activeSession?.evaluationReport
+                ? [
+                    {
+                      session: activeSession,
+                      scenario: activeScenario || scenarios[0],
+                      report: activeSession.evaluationReport,
+                      candidateName: 'Session En Direct (Votre Simulation)',
+                    },
+                  ]
+                : []),
+            ];
+
+            return (
+              <EvaluationDebrief
+                session={currentDebriefSession}
+                scenario={currentScenario}
+                report={currentReport}
+                onRestartScenario={() =>
+                  handleStartSimulation(currentScenario)
+                }
+                onBackToCatalog={() => setActiveView('catalog')}
+                availableEvaluations={availableEvaluations}
+                onSelectEvaluation={(s) => setSelectedDebriefSession(s)}
+              />
+            );
+          })()}
 
         {/* VIEW 5: MULTI-TENANT ARCHITECTURE & POSTGRESQL DDL BLUEPRINT */}
         {activeView === 'architecture' && (
@@ -658,6 +715,12 @@ export default function MiraStudioPlatformPage() {
             className="hover:text-light-primary transition-colors cursor-pointer"
           >
             Studio RAG
+          </button>
+          <button
+            onClick={() => setActiveView('debrief')}
+            className="hover:text-light-primary transition-colors cursor-pointer text-light-primary font-bold"
+          >
+            Évaluations & Bilan
           </button>
           <button
             onClick={() => setActiveView('architecture')}
