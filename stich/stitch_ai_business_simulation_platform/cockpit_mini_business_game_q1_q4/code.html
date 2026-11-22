@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="fr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cockpit Mini Business Game (Q1-Q4) — PiloteIA</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'success': '#146C2E',
+        'on-success': '#FFFFFF',
+        'success-container': '#C4EED0',
+        'on-success-container': '#072711',
+        'warning': '#8F4E00',
+        'on-warning': '#FFFFFF',
+        'warning-container': '#FFDCC1',
+        'on-warning-container': '#2E1500',
+        'light-primary': '#002C76',
+        'light-on-primary': '#FFFFFF',
+        'light-primary-container': '#1B4396',
+        'light-on-primary-container': '#9BB5FF',
+        'light-secondary': '#525D80',
+        'light-on-secondary': '#FFFFFF',
+        'light-secondary-container': '#CBD6FE',
+        'light-on-secondary-container': '#515C7E',
+        'light-tertiary': '#562100',
+        'light-on-tertiary': '#FFFFFF',
+        'light-tertiary-container': '#7A3200',
+        'light-on-tertiary-container': '#FF9F6B',
+        'light-error': '#BA1A1A',
+        'light-on-error': '#FFFFFF',
+        'light-error-container': '#FFDAD6',
+        'light-on-error-container': '#93000A',
+        'light-background': '#FAF8FF',
+        'light-on-background': '#1A1B21',
+        'light-surface': '#FAF8FF',
+        'light-surface-dim': '#DAD9E1',
+        'light-surface-bright': '#FAF8FF',
+        'light-surface-container-lowest': '#FFFFFF',
+        'light-surface-container-low': '#F4F3FB',
+        'light-surface-container': '#EEEDF5',
+        'light-surface-container-high': '#E8E7EF',
+        'light-surface-container-highest': '#E2E2E9',
+        'light-on-surface': '#1A1B21',
+        'light-surface-variant': '#E0E2F0',
+        'light-on-surface-variant': '#434651',
+        'light-outline': '#747783',
+        'light-outline-variant': '#C4C6D3',
+        'light-inverse-surface': '#2F3036',
+        'light-inverse-on-surface': '#F1F0F8',
+        'light-inverse-primary': '#B2C5FF',
+        'light-shadow': '#000000',
+        'light-scrim': '#000000',
+        'dark-primary': '#B2C5FF',
+        'dark-on-primary': '#002B73',
+        'dark-primary-container': '#1B4396',
+        'dark-on-primary-container': '#9BB5FF',
+        'dark-secondary': '#BAC5ED',
+        'dark-on-secondary': '#242F4F',
+        'dark-secondary-container': '#3D4869',
+        'dark-on-secondary-container': '#ACB7DE',
+        'dark-tertiary': '#FFB691',
+        'dark-on-tertiary': '#552100',
+        'dark-tertiary-container': '#7A3200',
+        'dark-on-tertiary-container': '#FF9F6B',
+        'dark-error': '#FFB4AB',
+        'dark-on-error': '#690005',
+        'dark-error-container': '#93000A',
+        'dark-on-error-container': '#FFDAD6',
+        'dark-background': '#121318',
+        'dark-on-background': '#E2E2E9',
+        'dark-surface': '#121318',
+        'dark-surface-dim': '#121318',
+        'dark-surface-bright': '#38393F',
+        'dark-surface-container-lowest': '#0C0E13',
+        'dark-surface-container-low': '#1A1B21',
+        'dark-surface-container': '#1E1F25',
+        'dark-surface-container-high': '#282A2F',
+        'dark-surface-container-highest': '#33343A',
+        'dark-on-surface': '#E2E2E9',
+        'dark-surface-variant': '#434651',
+        'dark-on-surface-variant': '#C4C6D3',
+        'dark-outline': '#8E909D',
+        'dark-outline-variant': '#434651',
+        'dark-inverse-surface': '#E2E2E9',
+        'dark-inverse-on-surface': '#2F3036',
+        'dark-inverse-primary': '#375AAE',
+        'dark-shadow': '#000000',
+        'dark-scrim': '#000000',
+      },
+      borderRadius: {
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '48px',
+        'page-margin': '24px',
+      },
+      fontFamily: {
+        'display': ['"Wix Madefor Display"', 'sans-serif'],
+        'headline': ['"Wix Madefor Display"', 'sans-serif'],
+        'title': ['"Instrument Sans"', 'sans-serif'],
+        'body': ['"Instrument Sans"', 'sans-serif'],
+        'label': ['"Instrument Sans"', 'sans-serif'],
+        'mono': ['"Source Code Pro"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['40px', { lineHeight: '48px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-lg-mobile': ['30px', { lineHeight: '36px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-lg': ['28px', { lineHeight: '36px', letterSpacing: '-0.25px', fontWeight: '600' }],
+        'headline-md': ['22px', { lineHeight: '28px', letterSpacing: '0px', fontWeight: '600' }],
+        'title-lg': ['18px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '600' }],
+        'title-md': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '600' }],
+        'body-lg': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-lg': ['14px', { lineHeight: '20px', letterSpacing: '0.1px', fontWeight: '600' }],
+        'label-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '500' }],
+        'mono-md': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '100ms',
+        'surface-enter': '220ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Source+Code+Pro:wght@500;600&amp;family=Wix+Madefor+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-light-surface text-light-on-surface font-body antialiased">
+  <div class="min-h-[1024px] flex flex-col bg-light-surface" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- Focused Cockpit Top Bar (Task Flow: Matches SimulateurDeVol.html) -->
+    <header class="bg-light-surface-container-lowest border-b border-light-outline-variant px-gutter-lg py-gutter-sm flex items-center justify-between gap-gutter-lg">
+      <div class="flex items-center gap-gutter-md">
+        <div class="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-title-lg" aria-hidden="true">flight_takeoff</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-gutter-sm">
+            <h1 data-design-text-token="title-lg" class="font-headline text-title-lg text-light-on-surface">Simulation Stratégique — BU Cloud Europe</h1>
+            <span data-component-id="badge-numeric" data-component-type="badge" data-component-variant="numeric" role="status" class="shrink-0 inline-flex items-center px-gutter-sm py-gutter-xs rounded-full bg-light-secondary-container text-light-on-secondary-container">
+              <span data-design-text-token="label-sm" class="font-body text-label-sm">Business Game</span>
+            </span>
+          </div>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Session #BG-3104 • Équipe Direction Commerciale</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-gutter-lg shrink-0">
+        <!-- Quarter & Timer Telemetry -->
+        <div class="flex items-center gap-gutter-md px-gutter-md py-gutter-xs rounded bg-light-surface-container-low border border-light-outline-variant">
+          <div class="flex items-center gap-gutter-xs">
+            <span class="material-symbols-outlined text-title-md text-light-primary" aria-hidden="true">calendar_today</span>
+            <span data-design-text-token="mono-md" class="font-mono text-mono-md text-light-on-surface tabular-nums">Trimestre Q2 / Q4</span>
+          </div>
+          <span class="text-light-outline-variant">|</span>
+          <div class="flex items-center gap-gutter-xs">
+            <span class="material-symbols-outlined text-title-md text-light-on-surface-variant" aria-hidden="true">timer</span>
+            <span data-design-text-token="mono-md" class="font-mono text-mono-md text-light-on-surface tabular-nums">18:45</span>
+          </div>
+        </div>
+
+        <button data-component-id="button-destructive" data-component-type="button" data-component-variant="destructive" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-gutter-sm rounded bg-light-surface-container-lowest text-light-error border border-light-outline-variant hover:bg-light-error-container transition-colors duration-state-change">
+          <span data-design-text-token="label-lg" class="font-body text-label-lg">Terminer la session</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Cockpit Split -->
+    <main class="flex-1 grid grid-cols-12">
+
+      <!-- Left Telemetry Panel: Financial & Deterministic State -->
+      <aside class="col-span-12 lg:col-span-4 bg-light-surface-container-low border-r border-light-outline-variant p-gutter-lg flex flex-col gap-gutter-md">
+        <div class="flex items-center justify-between">
+          <h2 data-design-text-token="title-md" class="font-headline text-title-md text-light-on-surface">État financier (Q2)</h2>
+          <span data-design-text-token="label-sm" class="font-mono text-label-sm text-light-primary">DÉTERMINISTE</span>
+        </div>
+
+        <!-- KPI 1: Cash -->
+        <article data-component-id="card-elevated" data-component-type="card" data-component-variant="elevated" class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-xs">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Trésorerie nette</span>
+            <span class="px-gutter-xs py-gutter-xs rounded bg-success-container text-on-success-container font-mono text-label-sm tabular-nums">+12 400 €</span>
+          </div>
+          <span class="font-headline text-headline-md text-light-on-surface tabular-nums">148 500 €</span>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Plancher critique : &lt; 25 000 €</span>
+        </article>
+
+        <!-- KPI 2: EBITDA Margin -->
+        <article data-component-id="card-elevated-2" data-component-type="card" data-component-variant="elevated" class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-xs">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Marge EBITDA</span>
+            <span class="px-gutter-xs py-gutter-xs rounded bg-success-container text-on-success-container font-mono text-label-sm tabular-nums">+1,2 pts</span>
+          </div>
+          <span class="font-headline text-headline-md text-light-on-surface tabular-nums">18,4 %</span>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Objectif annuel : 20,0 %</span>
+        </article>
+
+        <!-- KPI 3: Market Share & Team Morale -->
+        <div class="grid grid-cols-2 gap-gutter-sm">
+          <article class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-xs">
+            <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Part de marché</span>
+            <span class="font-headline text-title-lg text-light-on-surface tabular-nums">21,5 %</span>
+            <span class="font-mono text-label-sm text-success tabular-nums">+2,3 pts</span>
+          </article>
+          <article class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-xs">
+            <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Moral équipe</span>
+            <span class="font-headline text-title-lg text-warning tabular-nums">74 %</span>
+            <span class="font-mono text-label-sm text-light-error tabular-nums">-4 %</span>
+          </article>
+        </div>
+
+        <!-- AI Unexpected Event Alert -->
+        <div class="bg-warning-container border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-xs">
+          <div class="flex items-center gap-gutter-xs text-on-warning-container">
+            <span class="material-symbols-outlined text-title-md" aria-hidden="true">bolt</span>
+            <span data-design-text-token="label-lg" class="font-body text-label-lg">Imprévu marché Q2 (IA)</span>
+          </div>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-on-warning-container text-pretty">
+            Un concurrent direct baisse ses tarifs de 15 % sur le segment PME. La DRH signale un risque de départ sur 2 Account Executives seniors.
+          </p>
+        </div>
+      </aside>
+
+      <!-- Right Decision Workspace -->
+      <section class="col-span-12 lg:col-span-8 flex flex-col justify-between bg-light-surface p-gutter-xl gap-gutter-lg">
+        <div class="flex flex-col gap-gutter-lg">
+          <div class="flex items-center justify-between gap-gutter-md">
+            <div>
+              <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-light-on-surface">Décisions du trimestre Q2</h2>
+              <p data-design-text-token="body-md" class="font-body text-body-md text-light-on-surface-variant">
+                Ajustez vos leviers tarifaires, budgétaires et RH. Les formules P&amp;L recalculent l&#39;état à la validation.
+              </p>
+            </div>
+            <div class="px-gutter-md py-gutter-sm rounded bg-light-surface-container-lowest border border-light-outline-variant flex items-center gap-gutter-sm shrink-0">
+              <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Budget engagé</span>
+              <span class="font-mono text-mono-md text-light-primary tabular-nums">90 000 € / 148 500 €</span>
+            </div>
+          </div>
+
+          <!-- Decision Levers Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg">
+
+            <!-- Lever 1: Pricing -->
+            <article class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md">
+              <div class="flex items-center justify-between">
+                <h3 data-design-text-token="title-md" class="font-headline text-title-md text-light-on-surface">Politique tarifaire</h3>
+                <span class="font-mono text-mono-md text-light-primary tabular-nums">89 € / mois</span>
+              </div>
+              <label class="flex flex-col gap-gutter-xs">
+                <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Prix moyen par licence (actuel : 95 €)</span>
+                <input type="range" min="70" max="120" value="89" class="w-full accent-light-primary">
+              </label>
+              <div class="flex items-center justify-between text-label-sm font-mono text-light-on-surface-variant tabular-nums">
+                <span>70 € (Volume)</span>
+                <span>120 € (Premium)</span>
+              </div>
+            </article>
+
+            <!-- Lever 2: HR & Hiring -->
+            <article class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md">
+              <div class="flex items-center justify-between">
+                <h3 data-design-text-token="title-md" class="font-headline text-title-md text-light-on-surface">Recrutement &amp; Capacité</h3>
+                <span class="font-mono text-mono-md text-light-on-surface-variant tabular-nums">+2 ETP</span>
+              </div>
+              <div class="grid grid-cols-2 gap-gutter-sm">
+                <label class="flex flex-col gap-gutter-xs">
+                  <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Commerciaux AE</span>
+                  <input type="number" value="2" min="0" max="5" class="w-full rounded border border-light-outline-variant bg-light-surface-container-lowest px-gutter-sm py-gutter-xs font-mono text-mono-md tabular-nums">
+                </label>
+                <label class="flex flex-col gap-gutter-xs">
+                  <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Ingénieurs Support</span>
+                  <input type="number" value="0" min="0" max="5" class="w-full rounded border border-light-outline-variant bg-light-surface-container-lowest px-gutter-sm py-gutter-xs font-mono text-mono-md tabular-nums">
+                </label>
+              </div>
+            </article>
+
+            <!-- Lever 3: Budget Allocation (Full width) -->
+            <article class="md:col-span-2 bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md">
+              <div class="flex items-center justify-between">
+                <h3 data-design-text-token="title-md" class="font-headline text-title-md text-light-on-surface">Allocation budgétaire Q2</h3>
+                <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Plafond autorisé : 110 000 €</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-md">
+                <label class="flex flex-col gap-gutter-xs">
+                  <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Marketing &amp; Acquisition</span>
+                  <input type="text" value="45 000 €" class="w-full rounded border border-light-outline-variant bg-light-surface-container-lowest px-gutter-md py-gutter-sm font-mono text-mono-md tabular-nums">
+                </label>
+                <label class="flex flex-col gap-gutter-xs">
+                  <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">R&amp;D Produit</span>
+                  <input type="text" value="30 000 €" class="w-full rounded border border-light-outline-variant bg-light-surface-container-lowest px-gutter-md py-gutter-sm font-mono text-mono-md tabular-nums">
+                </label>
+                <label class="flex flex-col gap-gutter-xs">
+                  <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Rétention &amp; Primes RH</span>
+                  <input type="text" value="15 000 €" class="w-full rounded border border-light-outline-variant bg-light-surface-container-lowest px-gutter-md py-gutter-sm font-mono text-mono-md tabular-nums">
+                </label>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Virtual COMEX Reaction -->
+          <div class="bg-light-surface-container-low border border-light-outline-variant rounded-md p-gutter-md flex items-start gap-gutter-md">
+            <span class="material-symbols-outlined text-title-lg text-light-primary" aria-hidden="true">forum</span>
+            <div class="flex flex-col gap-gutter-xs">
+              <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Avis du COMEX virtuel (Gemini Flash)</span>
+              <p data-design-text-token="body-md" class="font-body text-body-md text-light-on-surface-variant text-pretty">
+                « Baisser le prix à 89 € protège notre part de marché face au concurrent, mais les 15 000 € de primes RH risquent d&#39;être justes pour retenir les deux commerciaux seniors. »
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="pt-gutter-md border-t border-light-outline-variant flex items-center justify-between gap-gutter-md">
+          <span data-design-text-token="body-md" class="font-body text-body-md text-light-on-surface-variant">
+            Trésorerie restante après engagement : <strong class="font-mono text-light-on-surface tabular-nums">58 500 €</strong>
+          </span>
+          <button data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-gutter-sm px-gutter-lg py-gutter-sm rounded bg-light-primary text-light-on-primary hover:bg-light-primary-container transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-title-lg" aria-hidden="true">check_circle</span>
+            <span data-design-text-token="label-lg" class="font-body text-label-lg">Valider les décisions Q2</span>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+</body></html>

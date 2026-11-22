@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="fr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interface de simulation (Cockpit) — PiloteIA</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'success': '#146C2E',
+        'on-success': '#FFFFFF',
+        'success-container': '#C4EED0',
+        'on-success-container': '#072711',
+        'warning': '#8F4E00',
+        'on-warning': '#FFFFFF',
+        'warning-container': '#FFDCC1',
+        'on-warning-container': '#2E1500',
+        'light-primary': '#002C76',
+        'light-on-primary': '#FFFFFF',
+        'light-primary-container': '#1B4396',
+        'light-on-primary-container': '#9BB5FF',
+        'light-secondary': '#525D80',
+        'light-on-secondary': '#FFFFFF',
+        'light-secondary-container': '#CBD6FE',
+        'light-on-secondary-container': '#515C7E',
+        'light-tertiary': '#562100',
+        'light-on-tertiary': '#FFFFFF',
+        'light-tertiary-container': '#7A3200',
+        'light-on-tertiary-container': '#FF9F6B',
+        'light-error': '#BA1A1A',
+        'light-on-error': '#FFFFFF',
+        'light-error-container': '#FFDAD6',
+        'light-on-error-container': '#93000A',
+        'light-background': '#FAF8FF',
+        'light-on-background': '#1A1B21',
+        'light-surface': '#FAF8FF',
+        'light-surface-dim': '#DAD9E1',
+        'light-surface-bright': '#FAF8FF',
+        'light-surface-container-lowest': '#FFFFFF',
+        'light-surface-container-low': '#F4F3FB',
+        'light-surface-container': '#EEEDF5',
+        'light-surface-container-high': '#E8E7EF',
+        'light-surface-container-highest': '#E2E2E9',
+        'light-on-surface': '#1A1B21',
+        'light-surface-variant': '#E0E2F0',
+        'light-on-surface-variant': '#434651',
+        'light-outline': '#747783',
+        'light-outline-variant': '#C4C6D3',
+        'light-inverse-surface': '#2F3036',
+        'light-inverse-on-surface': '#F1F0F8',
+        'light-inverse-primary': '#B2C5FF',
+        'light-shadow': '#000000',
+        'light-scrim': '#000000',
+        'dark-primary': '#B2C5FF',
+        'dark-on-primary': '#002B73',
+        'dark-primary-container': '#1B4396',
+        'dark-on-primary-container': '#9BB5FF',
+        'dark-secondary': '#BAC5ED',
+        'dark-on-secondary': '#242F4F',
+        'dark-secondary-container': '#3D4869',
+        'dark-on-secondary-container': '#ACB7DE',
+        'dark-tertiary': '#FFB691',
+        'dark-on-tertiary': '#552100',
+        'dark-tertiary-container': '#7A3200',
+        'dark-on-tertiary-container': '#FF9F6B',
+        'dark-error': '#FFB4AB',
+        'dark-on-error': '#690005',
+        'dark-error-container': '#93000A',
+        'dark-on-error-container': '#FFDAD6',
+        'dark-background': '#121318',
+        'dark-on-background': '#E2E2E9',
+        'dark-surface': '#121318',
+        'dark-surface-dim': '#121318',
+        'dark-surface-bright': '#38393F',
+        'dark-surface-container-lowest': '#0C0E13',
+        'dark-surface-container-low': '#1A1B21',
+        'dark-surface-container': '#1E1F25',
+        'dark-surface-container-high': '#282A2F',
+        'dark-surface-container-highest': '#33343A',
+        'dark-on-surface': '#E2E2E9',
+        'dark-surface-variant': '#434651',
+        'dark-on-surface-variant': '#C4C6D3',
+        'dark-outline': '#8E909D',
+        'dark-outline-variant': '#434651',
+        'dark-inverse-surface': '#E2E2E9',
+        'dark-inverse-on-surface': '#2F3036',
+        'dark-inverse-primary': '#375AAE',
+        'dark-shadow': '#000000',
+        'dark-scrim': '#000000',
+      },
+      borderRadius: {
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '48px',
+        'page-margin': '24px',
+      },
+      fontFamily: {
+        'display': ['"Wix Madefor Display"', 'sans-serif'],
+        'headline': ['"Wix Madefor Display"', 'sans-serif'],
+        'title': ['"Instrument Sans"', 'sans-serif'],
+        'body': ['"Instrument Sans"', 'sans-serif'],
+        'label': ['"Instrument Sans"', 'sans-serif'],
+        'mono': ['"Source Code Pro"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['40px', { lineHeight: '48px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-lg-mobile': ['30px', { lineHeight: '36px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-lg': ['28px', { lineHeight: '36px', letterSpacing: '-0.25px', fontWeight: '600' }],
+        'headline-md': ['22px', { lineHeight: '28px', letterSpacing: '0px', fontWeight: '600' }],
+        'title-lg': ['18px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '600' }],
+        'title-md': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '600' }],
+        'body-lg': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'label-lg': ['14px', { lineHeight: '20px', letterSpacing: '0.1px', fontWeight: '600' }],
+        'label-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '500' }],
+        'mono-md': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '100ms',
+        'surface-enter': '220ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Source+Code+Pro:wght@500;600&amp;family=Wix+Madefor+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-light-surface text-light-on-surface font-body antialiased">
+  <div class="min-h-[1024px] flex flex-col bg-light-surface" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- Focused Cockpit Top Bar (Task Flow: No distracting sidebar) -->
+    <header class="bg-light-surface-container-lowest border-b border-light-outline-variant px-gutter-lg py-gutter-sm flex items-center justify-between gap-gutter-lg">
+      <div class="flex items-center gap-gutter-md">
+        <div class="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-title-lg" aria-hidden="true">flight_takeoff</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-gutter-sm">
+            <h1 data-design-text-token="title-lg" class="font-headline text-title-lg text-light-on-surface">Crise Client Grands Comptes — Groupe Valmont</h1>
+            <span data-component-id="badge-warning" data-component-type="badge" data-component-variant="warning" role="status" class="shrink-0 inline-flex items-center px-gutter-sm py-gutter-xs rounded-full bg-warning-container text-on-warning-container">
+              <span data-design-text-token="label-sm" class="font-body text-label-sm">Assessment</span>
+            </span>
+          </div>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Session #SIM-8492 • Candidat : Claire Moreau</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-gutter-lg shrink-0">
+        <!-- Turn & Timer Telemetry -->
+        <div class="flex items-center gap-gutter-md px-gutter-md py-gutter-xs rounded bg-light-surface-container-low border border-light-outline-variant">
+          <div class="flex items-center gap-gutter-xs">
+            <span class="material-symbols-outlined text-title-md text-light-on-surface-variant" aria-hidden="true">sync</span>
+            <span data-design-text-token="mono-md" class="font-mono text-mono-md text-light-on-surface tabular-nums">Tour 4 / 8</span>
+          </div>
+          <span class="text-light-outline-variant">|</span>
+          <div class="flex items-center gap-gutter-xs">
+            <span class="material-symbols-outlined text-title-md text-light-error" aria-hidden="true">timer</span>
+            <span data-design-text-token="mono-md" class="font-mono text-mono-md text-light-error tabular-nums">14:22</span>
+          </div>
+        </div>
+
+        <button data-component-id="button-destructive" data-component-type="button" data-component-variant="destructive" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-gutter-sm rounded bg-light-surface-container-lowest text-light-error border border-light-outline-variant hover:bg-light-error-container transition-colors duration-state-change">
+          <span data-design-text-token="label-lg" class="font-body text-label-lg">Terminer la session</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Cockpit Split -->
+    <main class="flex-1 grid grid-cols-12">
+
+      <!-- Left Telemetry Panel: Deterministic State Engine -->
+      <aside class="col-span-12 lg:col-span-4 bg-light-surface-container-low border-r border-light-outline-variant p-gutter-lg flex flex-col gap-gutter-lg">
+        <div class="flex items-center justify-between">
+          <h2 data-design-text-token="title-md" class="font-headline text-title-md text-light-on-surface">Moteur d&#39;état en direct</h2>
+          <span data-design-text-token="label-sm" class="font-mono text-label-sm text-light-primary">DÉTERMINISTE</span>
+        </div>
+
+        <!-- KPI 1: Client Trust -->
+        <article data-component-id="card-elevated" data-component-type="card" data-component-variant="elevated" class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-sm">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Confiance client</span>
+            <div class="flex items-center gap-gutter-xs">
+              <span class="font-mono text-mono-md text-light-on-surface tabular-nums">42 %</span>
+              <span class="px-gutter-xs py-gutter-xs rounded bg-success-container text-on-success-container font-mono text-label-sm tabular-nums">+5 %</span>
+            </div>
+          </div>
+          <div class="w-full h-2 rounded-full bg-light-surface-container-highest overflow-hidden">
+            <div class="h-2 rounded-full bg-light-primary" style="width: 42%;"></div>
+          </div>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Seuil de rupture : &lt; 15 %</span>
+        </article>
+
+        <!-- KPI 2: Escalation Risk -->
+        <article data-component-id="card-elevated-2" data-component-type="card" data-component-variant="elevated" class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-sm">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Risque d&#39;escalade</span>
+            <div class="flex items-center gap-gutter-xs">
+              <span class="font-mono text-mono-md text-warning tabular-nums">65 %</span>
+              <span class="px-gutter-xs py-gutter-xs rounded bg-success-container text-on-success-container font-mono text-label-sm tabular-nums">-8 %</span>
+            </div>
+          </div>
+          <div class="w-full h-2 rounded-full bg-light-surface-container-highest overflow-hidden">
+            <div class="h-2 rounded-full bg-warning" style="width: 65%;"></div>
+          </div>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Alerte Direction Générale : &gt; 90 %</span>
+        </article>
+
+        <!-- KPI 3: Discount Offered -->
+        <article data-component-id="card-elevated-3" data-component-type="card" data-component-variant="elevated" class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-sm">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="label-lg" class="font-body text-label-lg text-light-on-surface">Remise engagée</span>
+            <span class="font-mono text-mono-md text-light-on-surface tabular-nums">10 % / 25 %</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-light-surface-container-highest overflow-hidden">
+            <div class="h-2 rounded-full bg-light-secondary" style="width: 40%;"></div>
+          </div>
+          <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Plafond sans validation DAF : 15 %</span>
+        </article>
+
+        <!-- RAG Guardrail Card -->
+        <div class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md flex flex-col gap-gutter-xs">
+          <div class="flex items-center gap-gutter-xs text-light-primary">
+            <span class="material-symbols-outlined text-title-md" aria-hidden="true">policy</span>
+            <span data-design-text-token="label-lg" class="font-body text-label-lg">Règle interne (RAG)</span>
+          </div>
+          <p data-design-text-token="body-md" class="font-body text-body-md text-light-on-surface-variant text-pretty">
+            Conformément à la procédure SLA 2026, tout avoir supérieur à 15 % exige un plan de remédiation signé sous 48 h.
+          </p>
+        </div>
+      </aside>
+
+      <!-- Right / Center: Narrative AI Engine & Dialogue -->
+      <section class="col-span-12 lg:col-span-8 flex flex-col justify-between bg-light-surface">
+
+        <!-- Active Persona Header -->
+        <div class="bg-light-surface-container-lowest border-b border-light-outline-variant px-gutter-xl py-gutter-md flex items-center justify-between gap-gutter-md">
+          <div class="flex items-center gap-gutter-md">
+            <img src="https://lh3.googleusercontent.com/aida/ALJJyrB2MqRzuUFmMUrXCc4fGCVX9uxdBMONY-d1NBvduvW8DSqy5WA1wfj-Cg1cVeG_EEh47VbasG4f4e4UE_cTZPTrbZ8ANr6a8Qo3ThELd147bnaDNnoJKfpn6v5xlemoUfHHngFZvkCQuNjorfHNoEcgrn2BC6W2q3R5tSWauPefqGufDlaZRaTCWFOv9gDVkrrhuXnvm1Q_kgOsRJBJZSGRFI9DL-gX4KU7VbULmzQt_WA0qugg" alt="Portrait de Marc Delacroix, Directeur Financier" class="w-12 h-12 rounded-full object-cover border border-light-outline-variant">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-gutter-sm">
+                <span data-design-text-token="title-md" class="font-headline text-title-md text-light-on-surface">Marc Delacroix</span>
+                <span class="px-gutter-sm py-gutter-xs rounded-full bg-warning-container text-on-warning-container font-body text-label-sm">Tension élevée</span>
+              </div>
+              <span data-design-text-token="body-md" class="font-body text-body-md text-light-on-surface-variant">Directeur Financier — Groupe Valmont (Contrat 420 k€/an)</span>
+            </div>
+          </div>
+          <span data-design-text-token="label-sm" class="font-mono text-label-sm text-light-on-surface-variant">Modèle : Gemini Flash</span>
+        </div>
+
+        <!-- Dialogue Thread -->
+        <div class="flex-1 p-gutter-xl flex flex-col gap-gutter-lg max-w-3xl">
+
+          <!-- Persona Message 1 -->
+          <div class="flex flex-col gap-gutter-xs items-start">
+            <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Marc Delacroix • Tour 3</span>
+            <div class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md max-w-prose">
+              <p data-design-text-token="body-lg" class="font-body text-body-lg text-light-on-surface text-pretty">
+                Votre plateforme a été inaccessible 4 heures hier pendant notre clôture mensuelle. Nos équipes ont perdu une demi-journée. Ne me parlez pas de vos excuses habituelles, qu&#39;est-ce que vous mettez sur la table maintenant ?
+              </p>
+            </div>
+          </div>
+
+          <!-- User Message + Deterministic Delta -->
+          <div class="flex flex-col gap-gutter-xs items-end">
+            <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Vous • Tour 3</span>
+            <div class="bg-light-primary text-light-on-primary rounded-md p-gutter-md max-w-prose">
+              <p data-design-text-token="body-lg" class="font-body text-body-lg text-pretty">
+                Je comprends parfaitement l&#39;impact sur votre clôture mensuelle, Marc. Nous assumons pleinement cet incident. Je vous propose un avoir immédiat de 10 % sur la facture du trimestre et un point technique avec notre CTO dès 16 h pour sécuriser la prochaine clôture.
+              </p>
+            </div>
+            <!-- Inline State Delta Chip -->
+            <div class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded bg-light-surface-container-low border border-light-outline-variant">
+              <span class="font-mono text-label-sm text-success tabular-nums">+5 % Confiance</span>
+              <span class="text-light-outline-variant">•</span>
+              <span class="font-mono text-label-sm text-success tabular-nums">-8 % Risque d&#39;escalade</span>
+              <span class="text-light-outline-variant">•</span>
+              <span class="font-mono text-label-sm text-light-on-surface-variant tabular-nums">Remise : 10 %</span>
+            </div>
+          </div>
+
+          <!-- Persona Message 2 (Current Turn) -->
+          <div class="flex flex-col gap-gutter-xs items-start">
+            <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">Marc Delacroix • Tour 4</span>
+            <div class="bg-light-surface-container-lowest border border-light-outline-variant rounded-md p-gutter-md max-w-prose">
+              <p data-design-text-token="body-lg" class="font-body text-body-lg text-light-on-surface text-pretty">
+                Un point avec votre CTO à 16 h est un début, mais 10 % d&#39;avoir ne couvre même pas nos heures supplémentaires. Notre comité de direction demande une clause de sortie anticipée si cela se reproduit. Comment répondez-vous à cette exigence ?
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Composer -->
+        <div class="bg-light-surface-container-lowest border-t border-light-outline-variant p-gutter-lg">
+          <div class="max-w-3xl flex flex-col gap-gutter-sm">
+            <textarea rows="3" placeholder="Rédigez votre réponse stratégique à Marc Delacroix..." class="w-full rounded border border-light-outline-variant bg-light-surface-container-lowest p-gutter-md font-body text-body-md text-light-on-surface placeholder:text-light-outline focus:border-light-primary focus:ring-1 focus:ring-light-primary"></textarea>
+            <div class="flex items-center justify-between gap-gutter-md">
+              <span data-design-text-token="label-sm" class="font-body text-label-sm text-light-on-surface-variant">
+                Astuce : appuyez sur <span class="font-mono">Ctrl + Entrée</span> pour valider le tour
+              </span>
+              <button data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-gutter-sm px-gutter-lg py-gutter-sm rounded bg-light-primary text-light-on-primary hover:bg-light-primary-container transition-colors duration-state-change">
+                <span class="material-symbols-outlined text-title-lg" aria-hidden="true">send</span>
+                <span data-design-text-token="label-lg" class="font-body text-label-lg">Envoyer la réponse</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+
+</body></html>

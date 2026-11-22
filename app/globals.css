@@ -1,18 +1,109 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Source+Code+Pro:wght@500;600;700&family=Wix+Madefor+Display:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block');
+
+:root {
+  --color-primary: #002C76;
+  --color-primary-container: #1B4396;
+  --color-on-primary: #FFFFFF;
+  --color-on-primary-container: #9BB5FF;
+  
+  --color-secondary: #525D80;
+  --color-secondary-container: #CBD6FE;
+  --color-on-secondary-container: #515C7E;
+  
+  --color-success: #146C2E;
+  --color-success-container: #C4EED0;
+  --color-on-success-container: #072711;
+  
+  --color-warning: #8F4E00;
+  --color-warning-container: #FFDCC1;
+  --color-on-warning-container: #2E1500;
+  
+  --color-error: #BA1A1A;
+  --color-error-container: #FFDAD6;
+  --color-on-error-container: #93000A;
+
+  --color-surface-lowest: #FFFFFF;
+  --color-surface-low: #F4F3FB;
+  --color-surface: #FAF8FF;
+  --color-surface-container: #EEEDF5;
+  --color-surface-high: #E8E7EF;
+  --color-surface-highest: #E2E2E9;
+  
+  --color-on-surface: #1A1B21;
+  --color-on-surface-variant: #434651;
+  --color-outline: #747783;
+  --color-outline-variant: #C4C6D3;
+}
+
 @layer base {
   body {
-    font-family: var(--font-sans), system-ui, sans-serif;
-    background-color: #0B0F17;
-    color: #F1F5F9;
+    font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+    background-color: #FAF8FF;
+    color: #1A1B21;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, .font-display {
-    font-family: var(--font-display), system-ui, sans-serif;
+  h1, h2, h3, h4, .font-display, .font-headline {
+    font-family: 'Wix Madefor Display', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.015em;
   }
 
-  .font-mono, code, pre {
-    font-family: var(--font-mono), monospace;
+  .font-mono, code, pre, .tabular-nums {
+    font-family: 'Source Code Pro', monospace;
     font-variant-numeric: tabular-nums;
   }
 }
+
+.material-symbols-outlined {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1 !important;
+  box-sizing: content-box;
+  overflow: hidden;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle;
+}
+
+/* Design System Utilities */
+.bg-light-primary { background-color: #002C76; }
+.bg-light-primary-container { background-color: #1B4396; }
+.text-light-primary { color: #002C76; }
+.text-light-on-primary { color: #FFFFFF; }
+.text-light-on-primary-container { color: #9BB5FF; }
+
+.bg-light-secondary { background-color: #525D80; }
+.bg-light-secondary-container { background-color: #CBD6FE; }
+.text-light-on-secondary-container { color: #515C7E; }
+
+.bg-light-surface { background-color: #FAF8FF; }
+.bg-light-surface-container-lowest { background-color: #FFFFFF; }
+.bg-light-surface-container-low { background-color: #F4F3FB; }
+.bg-light-surface-container { background-color: #EEEDF5; }
+.bg-light-surface-container-high { background-color: #E8E7EF; }
+.bg-light-surface-container-highest { background-color: #E2E2E9; }
+
+.text-light-on-surface { color: #1A1B21; }
+.text-light-on-surface-variant { color: #434651; }
+
+.border-light-outline { border-color: #747783; }
+.border-light-outline-variant { border-color: #C4C6D3; }
+
+.bg-success-container { background-color: #C4EED0; }
+.text-on-success-container { color: #072711; }
+.text-success { color: #146C2E; }
+
+.bg-warning-container { background-color: #FFDCC1; }
+.text-on-warning-container { color: #2E1500; }
+.text-warning { color: #8F4E00; }
+
+.bg-light-error-container { background-color: #FFDAD6; }
+.text-light-error { color: #BA1A1A; }
+
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }

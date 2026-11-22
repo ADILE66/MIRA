@@ -40,13 +40,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="fr"
-      className={`dark ${outfit.variable} ${plusJakarta.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="fr" className="bg-[#FAF8FF] text-[#1A1B21]">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Source+Code+Pro:wght@500;600;700&family=Wix+Madefor+Display:wght@600;700;800&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block"
+          rel="stylesheet"
+        />
+      </head>
       <body
         suppressHydrationWarning
-        className="bg-[#0B0F17] text-slate-100 font-sans antialiased selection:bg-blue-500/30 selection:text-blue-200 min-h-screen"
+        className="bg-[#FAF8FF] text-[#1A1B21] font-sans antialiased selection:bg-[#CBD6FE] selection:text-[#002C76] min-h-screen"
       >
         {children}
       </body>

@@ -153,96 +153,67 @@ export default function MiraStudioPlatformPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0F17] text-slate-100">
-      {/* STRICT 3-ZONE TOP BAR CONTRACT */}
-      <header className="flex items-center justify-between gap-8 px-6 py-4 border-b border-slate-800 bg-[#0B0F17]/95 sticky top-0 z-30 backdrop-blur-md">
-        {/* Zone 1: Single text element wordmark */}
+    <div className="min-h-screen flex flex-col bg-light-surface text-light-on-surface">
+      {/* STRICT 3-ZONE TOP BAR CONTRACT — STITCH CORPORATE STYLE */}
+      <header className="bg-light-surface-container-lowest border-b border-light-outline-variant px-6 py-3 flex items-center justify-between gap-6 sticky top-0 z-30 shadow-xs backdrop-blur-md">
+        {/* Zone 1: Single text element wordmark + Aviation / Simulation Mark */}
         <button
           onClick={() => setActiveView('landing')}
-          className="flex items-center gap-2.5 text-left cursor-pointer group"
+          className="flex items-center gap-3 text-left cursor-pointer group"
         >
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 flex items-center justify-center text-white font-bold text-xs shadow-md shadow-blue-500/20">
-            M
+          <div className="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center font-bold text-sm shadow-xs group-hover:bg-light-primary-container transition-colors">
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">flight_takeoff</span>
           </div>
-          <span className="text-lg font-bold tracking-tight text-white font-display whitespace-nowrap shrink-0 group-hover:text-blue-300 transition-colors">
-            MiraStudio
-          </span>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="font-headline text-lg font-bold text-light-on-surface tracking-tight">
+                MiraStudio
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-light-secondary-container text-light-on-secondary-container font-mono text-[11px] font-semibold">
+                Simulateur B2B
+              </span>
+            </div>
+            <span className="text-[11px] text-light-on-surface-variant font-medium">
+              Tenant : {activeOrg.name.split(' (')[0]}
+            </span>
+          </div>
         </button>
 
-        {/* Zone 2: 4-5 clean single-line text navigation links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
-          <button
-            onClick={() => setActiveView('landing')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-              activeView === 'landing'
-                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
-                : ''
-            }`}
-          >
-            Accueil
-          </button>
-          <button
-            onClick={() => setActiveView('catalog')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-              activeView === 'catalog'
-                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
-                : ''
-            }`}
-          >
-            Catalogue
-          </button>
-          <button
-            onClick={() => {
-              if (activeSession) {
-                setActiveView('cockpit');
-              } else {
-                handleStartSimulation(scenarios[0]);
-              }
-            }}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-              activeView === 'cockpit'
-                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
-                : ''
-            }`}
-          >
-            Cockpit
-          </button>
-          <button
-            onClick={() => setActiveView('studio')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-              activeView === 'studio'
-                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
-                : ''
-            }`}
-          >
-            Studio RAG
-          </button>
-          <button
-            onClick={() => {
-              if (activeSession?.evaluationReport) {
-                setActiveView('debrief');
-              } else {
-                setActiveView('architecture');
-              }
-            }}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-              activeView === 'debrief'
-                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
-                : ''
-            }`}
-          >
-            Évaluations
-          </button>
-          <button
-            onClick={() => setActiveView('architecture')}
-            className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-              activeView === 'architecture'
-                ? 'text-white underline underline-offset-8 decoration-blue-500 font-semibold'
-                : ''
-            }`}
-          >
-            Architecture
-          </button>
+        {/* Zone 2: Clean single-line text navigation links */}
+        <nav className="hidden md:flex items-center gap-1.5 text-xs font-semibold">
+          {[
+            { id: 'landing', label: 'Accueil' },
+            { id: 'catalog', label: 'Catalogue des 4 Modules' },
+            { id: 'cockpit', label: 'Cockpit Simulation' },
+            { id: 'studio', label: 'Studio RAG' },
+            { id: 'debrief', label: 'Évaluations' },
+            { id: 'architecture', label: 'Marque Blanche & RLS' },
+          ].map((item) => {
+            const isActive = activeView === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.id === 'cockpit') {
+                    if (activeSession) setActiveView('cockpit');
+                    else handleStartSimulation(scenarios[0]);
+                  } else if (item.id === 'debrief') {
+                    if (activeSession?.evaluationReport) setActiveView('debrief');
+                    else setActiveView('architecture');
+                  } else {
+                    setActiveView(item.id as MainView);
+                  }
+                }}
+                className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-light-secondary-container text-light-primary font-bold shadow-xs'
+                    : 'text-light-on-surface-variant hover:text-light-on-surface hover:bg-light-surface-container'
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Zone 3: 1 primary action */}
@@ -255,11 +226,14 @@ export default function MiraStudioPlatformPage() {
                 handleStartSimulation(scenarios[0]);
               }
             }}
-            className="px-4 py-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors whitespace-nowrap shrink-0"
+            className="px-4 py-2 text-xs font-semibold text-light-on-primary bg-light-primary rounded hover:bg-light-primary-container transition-colors whitespace-nowrap shrink-0 shadow-xs flex items-center gap-1.5 cursor-pointer"
           >
-            {activeSession && activeSession.status === 'active'
-              ? 'Reprendre la Simulation'
-              : 'Lancer Simulation'}
+            <span className="material-symbols-outlined text-base">play_arrow</span>
+            <span>
+              {activeSession && activeSession.status === 'active'
+                ? 'Reprendre la Simulation'
+                : 'Lancer Simulation'}
+            </span>
           </button>
         </div>
       </header>
@@ -285,39 +259,37 @@ export default function MiraStudioPlatformPage() {
         {activeView === 'catalog' && (
           <div className="max-w-[1440px] mx-auto px-6 py-10 space-y-12">
             {/* Hero Section */}
-            <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pb-10 border-b border-slate-800">
+            <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pb-10 border-b border-light-outline-variant">
               <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                 <div className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                    <span>Tenant Actif : {activeOrg.name}</span>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-light-on-surface-variant font-medium">
+                    <span className="px-2 py-0.5 rounded bg-light-surface-container-low border border-light-outline-variant font-mono">
+                      Tenant Actif : {activeOrg.name.split(' (')[0]}
+                    </span>
                     <span aria-hidden="true">·</span>
-                    <span>Éligible CSF (OFPPT / GIAC)</span>
+                    <span className="text-success font-semibold">Éligible CSF (OFPPT / GIAC)</span>
                     <span aria-hidden="true">·</span>
                     <span>Conformité Loi 69-21, CNDP 09-08 & DGSSI</span>
                   </div>
 
                   <h1
-                    className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white font-display tracking-tight leading-[1.12]"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-bold text-light-on-surface font-headline tracking-tight leading-[1.15]"
                     style={{ textWrap: 'balance' }}
                   >
-                    Le simulateur de vol tactique pour les entreprises, ETI et
-                    Business Schools au Maroc.
+                    Le simulateur de vol tactique pour les entreprises, ETI et Business Schools.
                   </h1>
 
-                  <p className="text-base text-slate-300 leading-relaxed max-w-2xl">
-                    Remplacez les formations passives et les recrutements
-                    subjectifs par des mises en situation ancrées dans la réalité
-                    économique marocaine (Casablanca Finance City, Tanger Med,
-                    Casanearshore). Notre moteur hybride sépare le{' '}
-                    <strong className="text-white font-medium">
-                      Moteur d’État déterministe (KPIs en MAD/Dirhams)
+                  <p className="text-base text-light-on-surface-variant leading-relaxed max-w-2xl">
+                    Remplacez les formations passives et les recrutements subjectifs par des mises en situation réalistes.
+                    Notre moteur hybride sépare le{' '}
+                    <strong className="text-light-on-surface font-semibold">
+                      Moteur d’État déterministe (KPIs stricts sans hallucination)
                     </strong>{' '}
                     du{' '}
-                    <strong className="text-white font-medium">
-                      Moteur Narratif IA
+                    <strong className="text-light-on-surface font-semibold">
+                      Moteur Narratif IA (Gemini 2.5 Flash)
                     </strong>{' '}
-                    adossé à vos référentiels internes (Loi 69-21 délais de
-                    paiement, Loi 09-08 CNDP, DGSSI).
+                    adossé à vos référentiels et documents internes RAG.
                   </p>
                 </div>
 
@@ -325,14 +297,14 @@ export default function MiraStudioPlatformPage() {
                   <button
                     onClick={() => handleStartSimulation(scenarios[0])}
                     disabled={isStartingSessionId !== null}
-                    className="px-5 py-3 text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap shrink-0"
+                    className="px-5 py-3 text-xs font-semibold text-light-on-primary bg-light-primary hover:bg-light-primary-container rounded transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 shadow-xs cursor-pointer"
                   >
                     {isStartingSessionId === scenarios[0].id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      <Play className="w-4 h-4" />
+                      <span className="material-symbols-outlined text-base">flight_takeoff</span>
                     )}
-                    Lancer Template #1 : Crise Logistique Tanger Med (MAD)
+                    <span>Lancer Module #1 : Crise Logistique & SLA</span>
                   </button>
 
                   <button
@@ -340,93 +312,85 @@ export default function MiraStudioPlatformPage() {
                       handleStartSimulation(scenarios[1] || scenarios[0])
                     }
                     disabled={isStartingSessionId !== null}
-                    className="px-5 py-3 text-xs font-medium text-slate-200 bg-[#111827] hover:bg-slate-800 border border-slate-700 rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap shrink-0"
+                    className="px-5 py-3 text-xs font-semibold text-light-on-surface bg-light-surface-container-lowest hover:bg-light-surface-container border border-light-outline-variant rounded transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 shadow-xs cursor-pointer"
                   >
                     {isStartingSessionId === scenarios[1]?.id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      <Sliders className="w-4 h-4 text-blue-400" />
+                      <span className="material-symbols-outlined text-base text-light-primary">bar_chart</span>
                     )}
-                    Lancer Template #2 : Business Game CFC & Afrique (4 Trimestres)
+                    <span>Lancer Module #2 : Business Game (4 Trimestres)</span>
                   </button>
 
                   <button
                     onClick={() => setActiveView('studio')}
-                    className="px-4 py-3 text-xs font-medium text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0"
+                    className="px-4 py-3 text-xs font-semibold text-light-primary hover:text-light-primary-container transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
                   >
-                    <span>Ouvrir le Studio RAG Maroc</span>
+                    <span>Ouvrir le Studio RAG</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
               {/* Right Column of Hero: Live Hybrid Architecture Preview Card */}
-              <div className="lg:col-span-5 p-6 bg-[#111827] border border-slate-800 rounded-xl flex flex-col justify-between space-y-5">
+              <div className="lg:col-span-5 p-6 bg-light-surface-container-lowest border border-light-outline-variant rounded-xl shadow-xs flex flex-col justify-between space-y-5">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-mono text-blue-400">
-                      ARCHITECTURE MOTEUR HYBRIDE MAROC
+                    <span className="font-mono text-light-primary font-semibold">
+                      ARCHITECTURE MOTEUR HYBRIDE
                     </span>
-                    <span className="font-mono text-slate-400">
+                    <span className="px-2 py-0.5 rounded bg-success-container text-on-success-container font-mono text-[11px] font-semibold">
                       Zéro Hallucination KPI
                     </span>
                   </div>
-                  <h2 className="text-lg font-semibold text-white font-display">
-                    Ancrage Réglementaire & Économique Marocain
+                  <h2 className="text-lg font-bold text-light-on-surface font-headline">
+                    Ancrage Documentaire & Rigueur Décisionnelle
                   </h2>
                 </div>
 
                 <div className="space-y-3 text-xs">
-                  <div className="p-3.5 bg-[#0B0F17] border border-slate-800 rounded-lg space-y-1">
+                  <div className="p-3.5 bg-light-surface-container-low border border-light-outline-variant rounded-lg space-y-1">
                     <div className="flex items-center justify-between font-mono">
-                      <span className="text-emerald-400">
-                        01. Moteur d’État Déterministe (MAD / kMAD)
+                      <span className="text-success font-semibold">
+                        01. Moteur d’État Déterministe
                       </span>
-                      <span className="text-slate-500">TypeScript Reducer</span>
+                      <span className="text-light-on-surface-variant font-medium">TypeScript Reducer</span>
                     </div>
-                    <p className="text-slate-400">
-                      Calcule la trésorerie en Dirhams, la marge brute, le BFR
-                      (Loi 69-21 : 60j max) et le chronomètre avec plafonds
-                      stricts.
+                    <p className="text-light-on-surface-variant">
+                      Calcule la trésorerie, la marge brute, les seuils critiques et le chronomètre avec plafonds stricts.
                     </p>
                   </div>
 
-                  <div className="p-3.5 bg-[#0B0F17] border border-slate-800 rounded-lg space-y-1">
+                  <div className="p-3.5 bg-light-surface-container-low border border-light-outline-variant rounded-lg space-y-1">
                     <div className="flex items-center justify-between font-mono">
-                      <span className="text-blue-400">
-                        02. Moteur Narratif & RAG (CNDP / DGSSI)
+                      <span className="text-light-primary font-semibold">
+                        02. Moteur Narratif & RAG
                       </span>
-                      <span className="text-slate-500">gemini-4-hydrogen</span>
+                      <span className="text-light-on-surface-variant font-medium">Gemini 2.5 Flash</span>
                     </div>
-                    <p className="text-slate-400">
-                      Incarne un DSI à Tanger Med, un Board à Casablanca Finance
-                      City ou une Tech Lead à Casanearshore et audite vos lois
-                      et procédures.
+                    <p className="text-light-on-surface-variant">
+                      Incarne des personas adaptatifs et audite en temps réel vos politiques et procédures internes.
                     </p>
                   </div>
 
-                  <div className="p-3.5 bg-[#0B0F17] border border-slate-800 rounded-lg space-y-1">
+                  <div className="p-3.5 bg-light-surface-container-low border border-light-outline-variant rounded-lg space-y-1">
                     <div className="flex items-center justify-between font-mono">
-                      <span className="text-amber-400">
-                        03. Agent Évaluateur & Dossier CSF / GIAC
+                      <span className="text-warning font-semibold">
+                        03. Agent Évaluateur Structuré
                       </span>
-                      <span className="text-slate-500">Radar 5 Axes</span>
+                      <span className="text-light-on-surface-variant font-medium">Radar 5 Axes</span>
                     </div>
-                    <p className="text-slate-400">
-                      Génère le bilan d’évaluation individuel exploitable par
-                      les DRH et Cabinets pour les bilans de compétences et
-                      dossiers OFPPT.
+                    <p className="text-light-on-surface-variant">
+                      Génère le bilan d’évaluation individuel certifié avec moments critiques et reformulations idéales.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400">
-                  <span>
-                    {knowledgeDocuments.length} référentiels RAG actifs
-                  </span>
+                <div className="flex items-center justify-between pt-2 border-t border-light-outline-variant text-xs text-light-on-surface-variant">
+                  <span>{knowledgeDocuments.length} référentiels RAG actifs</span>
                   <button
                     onClick={() => setActiveView('architecture')}
-                    className="text-blue-400 hover:text-blue-300 font-medium"
+                    className="text-light-primary hover:underline font-semibold"
                   >
                     Inspecter le Schéma PostgreSQL →
                   </button>
@@ -435,20 +399,19 @@ export default function MiraStudioPlatformPage() {
             </section>
 
             {/* Full-Width 4-Column Architecture Overview Strip (1 Engine, 4 Modules) */}
-            <section className="space-y-4">
+            <section className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-white font-display">
+                  <h2 className="text-2xl font-bold text-light-on-surface font-headline">
                     Un Moteur Unique, 4 Modules Opérationnels
                   </h2>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Filtrez le catalogue de simulations par cas d’usage B2B ou
-                    créez votre propre scénario dans le Studio RAG
+                  <p className="text-xs text-light-on-surface-variant mt-1">
+                    Filtrez le catalogue de simulations par cas d’usage B2B ou créez votre propre scénario dans le Studio RAG.
                   </p>
                 </div>
 
                 {/* Interactive Segmented Filter Controls */}
-                <div className="flex flex-wrap items-center gap-1 p-1 bg-[#111827] border border-slate-800 rounded-lg">
+                <div className="flex flex-wrap items-center gap-1 p-1 bg-light-surface-container border border-light-outline-variant rounded-lg">
                   {(
                     [
                       { id: 'all', label: 'Tous les Modules (4)' },
@@ -461,10 +424,10 @@ export default function MiraStudioPlatformPage() {
                     <button
                       key={tab.id}
                       onClick={() => setSelectedModuleFilter(tab.id)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+                      className={`px-3 py-1.5 text-xs font-semibold rounded transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                         selectedModuleFilter === tab.id
-                          ? 'bg-blue-600 text-white'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-light-primary text-light-on-primary shadow-xs'
+                          : 'text-light-on-surface-variant hover:text-light-on-surface hover:bg-light-surface-container-low'
                       }`}
                     >
                       {tab.label}
@@ -474,7 +437,7 @@ export default function MiraStudioPlatformPage() {
               </div>
 
               {/* Scenarios Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {filteredScenarios.map((scenario) => {
                   const attachedDoc = knowledgeDocuments.find(
                     (d) => d.id === scenario.knowledgeDocumentId
@@ -482,59 +445,57 @@ export default function MiraStudioPlatformPage() {
                   const isStarting = isStartingSessionId === scenario.id;
 
                   return (
-                    <div
+                    <article
                       key={scenario.id}
-                      className="p-6 bg-[#111827] border border-slate-800 rounded-xl flex flex-col justify-between space-y-6 hover:border-slate-700 transition-colors"
+                      className="p-6 bg-light-surface-container-lowest border border-light-outline-variant rounded-xl shadow-xs flex flex-col justify-between space-y-6 hover:border-light-primary transition-colors"
                     >
                       <div className="space-y-4">
                         {/* Unboxed Metadata Line with typographic separators */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
-                          <div className="flex items-center gap-2">
-                            <span className="text-blue-400 font-medium">
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-light-on-surface-variant">
+                          <div className="flex items-center gap-2 font-medium">
+                            <span className="px-2 py-0.5 rounded-full bg-light-secondary-container text-light-on-secondary-container font-mono text-[11px] font-semibold">
                               {getModuleLabel(scenario.moduleType)}
                             </span>
                             <span aria-hidden="true">·</span>
                             <span>Difficulté {scenario.difficulty}</span>
                             <span aria-hidden="true">·</span>
                             <span className="font-mono tabular-nums flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {scenario.durationMinutes} min (
-                              {scenario.initialState.turn.max} séquences)
+                              <Clock className="w-3.5 h-3.5" />
+                              {scenario.durationMinutes} min ({scenario.initialState.turn.max} séquences)
                             </span>
                           </div>
                           {scenario.isFlagship && (
-                            <span className="font-mono text-emerald-400">
-                              ★ Scénario Phare MVP
+                            <span className="font-mono text-success font-semibold px-2 py-0.5 rounded bg-success-container text-on-success-container text-[11px]">
+                              ★ Scénario Phare
                             </span>
                           )}
                         </div>
 
                         <div>
-                          <h3 className="text-xl font-semibold text-white font-display">
+                          <h3 className="text-xl font-bold text-light-on-surface font-headline">
                             {scenario.title}
                           </h3>
-                          <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                          <p className="text-xs text-light-on-surface-variant mt-1.5 leading-relaxed">
                             {scenario.subtitle}
                           </p>
                         </div>
 
                         {/* Persona & RAG Document Link */}
-                        <div className="p-4 bg-[#0B0F17] border border-slate-800/90 rounded-lg space-y-2.5 text-xs">
+                        <div className="p-3.5 bg-light-surface-container-low border border-light-outline-variant rounded-lg space-y-2 text-xs">
                           <div className="flex items-center justify-between">
-                            <span className="text-slate-400">
+                            <span className="text-light-on-surface-variant">
                               Persona IA Adaptatif :
                             </span>
-                            <span className="font-medium text-white">
-                              {scenario.initialState.personaState.name} —{' '}
-                              {scenario.initialState.personaState.role}
+                            <span className="font-semibold text-light-on-surface">
+                              {scenario.initialState.personaState.name} — {scenario.initialState.personaState.role}
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-slate-400 flex items-center gap-1.5">
-                              <BookOpen className="w-3.5 h-3.5 text-blue-400" />
+                            <span className="text-light-on-surface-variant flex items-center gap-1.5">
+                              <BookOpen className="w-3.5 h-3.5 text-light-primary" />
                               Référentiel RAG Audité :
                             </span>
-                            <span className="text-slate-200 truncate max-w-[260px]">
+                            <span className="text-light-on-surface font-medium truncate max-w-[260px]">
                               {attachedDoc?.title || 'Procédure Interne'}
                             </span>
                           </div>
@@ -542,7 +503,7 @@ export default function MiraStudioPlatformPage() {
 
                         {/* Deterministic KPIs Preview */}
                         <div className="space-y-2">
-                          <div className="text-xs font-medium text-slate-400">
+                          <div className="text-xs font-semibold text-light-on-surface-variant">
                             Variables Chiffrées du Moteur d’État :
                           </div>
                           <div className="grid grid-cols-3 gap-2.5">
@@ -551,17 +512,17 @@ export default function MiraStudioPlatformPage() {
                               .map((metric) => (
                                 <div
                                   key={metric.id}
-                                  className="p-2.5 bg-[#0B0F17] border border-slate-800/80 rounded-lg"
+                                  className="p-2.5 bg-light-surface-container-low border border-light-outline-variant rounded-lg"
                                 >
-                                  <div className="text-[11px] text-slate-400 truncate">
+                                  <div className="text-[11px] text-light-on-surface-variant truncate">
                                     {metric.label}
                                   </div>
                                   <div className="mt-1 flex items-baseline justify-between font-mono tabular-nums">
-                                    <span className="text-sm font-semibold text-white">
+                                    <span className="text-sm font-bold text-light-on-surface">
                                       {metric.value}
                                       {metric.unit}
                                     </span>
-                                    <span className="text-[10px] text-blue-400">
+                                    <span className="text-[10px] text-light-primary font-medium">
                                       Cible {metric.targetThreshold}
                                       {metric.unit}
                                     </span>
@@ -573,32 +534,31 @@ export default function MiraStudioPlatformPage() {
                       </div>
 
                       {/* Card Footer Actions */}
-                      <div className="pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
-                        <div className="text-xs text-slate-400 font-mono tabular-nums">
-                          {scenario.initialState.tacticalLevers.length} leviers
-                          tactiques · Seuil réussite{' '}
+                      <div className="pt-4 border-t border-light-outline-variant flex items-center justify-between gap-4">
+                        <div className="text-xs text-light-on-surface-variant font-mono tabular-nums">
+                          {scenario.initialState.tacticalLevers.length} leviers tactiques · Seuil réussite{' '}
                           {scenario.evaluationRubric.passingScore}/100
                         </div>
 
                         <button
                           onClick={() => handleStartSimulation(scenario)}
                           disabled={isStarting}
-                          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap shrink-0"
+                          className="px-4 py-2 bg-light-primary hover:bg-light-primary-container disabled:opacity-50 text-light-on-primary text-xs font-semibold rounded transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 shadow-xs cursor-pointer"
                         >
                           {isStarting ? (
                             <>
                               <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              Initialisation...
+                              <span>Initialisation...</span>
                             </>
                           ) : (
                             <>
-                              <Play className="w-3.5 h-3.5" />
-                              Entrer dans le Cockpit
+                              <span className="material-symbols-outlined text-base">flight_takeoff</span>
+                              <span>Entrer dans le Cockpit</span>
                             </>
                           )}
                         </button>
                       </div>
-                    </div>
+                    </article>
                   );
                 })}
               </div>
@@ -666,42 +626,44 @@ export default function MiraStudioPlatformPage() {
         )}
       </main>
 
-      {/* Quiet Footer */}
-      <footer className="px-6 py-5 border-t border-slate-800/80 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-4">
+      {/* Clean Corporate Footer — Stitch Design System */}
+      <footer className="bg-light-surface-container-lowest border-t border-light-outline-variant px-6 py-4 text-xs text-light-on-surface-variant flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-300 font-display">
+          <div className="w-5 h-5 rounded bg-light-primary text-light-on-primary flex items-center justify-center text-[10px]">
+            <span className="material-symbols-outlined text-xs">flight_takeoff</span>
+          </div>
+          <span className="font-bold text-light-on-surface font-headline">
             MiraStudio
           </span>
           <span aria-hidden="true">·</span>
           <span>
-            Simulateur B2B Hybride (Moteur d’État Déterministe + Moteur Narratif
-            Gemini + RAG)
+            Simulateur B2B Haute Précision (Moteur d’État Déterministe + Gemini 2.5 Flash + RAG)
           </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5 font-medium">
           <button
             onClick={() => setActiveView('landing')}
-            className="hover:text-slate-300 transition-colors cursor-pointer"
+            className="hover:text-light-primary transition-colors cursor-pointer"
           >
-            Accueil (Landing Page)
+            Accueil
           </button>
           <button
             onClick={() => setActiveView('catalog')}
-            className="hover:text-slate-300 transition-colors cursor-pointer"
+            className="hover:text-light-primary transition-colors cursor-pointer"
           >
-            Catalogue des 4 Modules
+            Catalogue (4 Modules)
           </button>
           <button
             onClick={() => setActiveView('studio')}
-            className="hover:text-slate-300 transition-colors cursor-pointer"
+            className="hover:text-light-primary transition-colors cursor-pointer"
           >
             Studio RAG
           </button>
           <button
             onClick={() => setActiveView('architecture')}
-            className="hover:text-slate-300 transition-colors cursor-pointer"
+            className="hover:text-light-primary transition-colors cursor-pointer"
           >
-            Schéma Multi-Tenant PostgreSQL
+            Architecture & Marque Blanche
           </button>
         </div>
       </footer>
