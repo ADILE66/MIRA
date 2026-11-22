@@ -26,6 +26,8 @@ import EvaluationDebrief from '@/components/EvaluationDebrief';
 import ArchitectureBlueprintView from '@/components/ArchitectureBlueprintView';
 import LandingPageView from '@/components/LandingPageView';
 import PricingView from '@/components/PricingView';
+import AuthModal from '@/components/AuthModal';
+import { DEMO_ENTERPRISE_PERSONAS, DemoEnterprisePersona } from '@/lib/auth';
 import {
   Play,
   Clock,
@@ -35,6 +37,15 @@ import {
   ArrowRight,
   Layers,
   Award,
+  Lock,
+  User,
+  LogOut,
+  ChevronDown,
+  Building,
+  Sparkles,
+  Check,
+  ShieldCheck,
+  UserCheck,
 } from 'lucide-react';
 
 type MainView =
@@ -79,13 +90,37 @@ export default function MiraStudioPlatformPage() {
   );
   const [isEvaluating, setIsEvaluating] = useState(false);
 
-  // Sync with server-side bootstrap store
+  // Authentication & Multi-Tenant State
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(INITIAL_USERS[0]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [authTargetFeature, setAuthTargetFeature] = useState<string | undefined>(undefined);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+  const [isTenantMenuOpen, setIsTenantMenuOpen] = useState<boolean>(false);
+
+  // Sync with server-side auth & bootstrap store
   useEffect(() => {
-    async function loadBootstrap() {
+    async function loadAuthAndBootstrap() {
       try {
-        const res = await fetch('/api/bootstrap');
-        if (res.ok) {
-          const data = await res.json();
+        const [authRes, bootRes] = await Promise.all([
+          fetch('/api/auth/me').catch(() => null),
+          fetch('/api/bootstrap').catch(() => null),
+        ]);
+
+        if (authRes && authRes.ok) {
+          const authData = await authRes.json();
+          if (authData.user) {
+            setCurrentUser(authData.user);
+            setIsAuthenticated(authData.isAuthenticated);
+          }
+          if (authData.organization) {
+            setActiveOrg(authData.organization);
+          }
+        }
+
+        if (bootRes && bootRes.ok) {
+          const data = await bootRes.json();
           if (data.organizations?.length) setOrganizations(data.organizations);
           if (data.users?.length) setUsers(data.users);
           if (data.knowledgeDocuments?.length)
@@ -98,8 +133,90 @@ export default function MiraStudioPlatformPage() {
         // Fallback to local seed state already initialized
       }
     }
-    loadBootstrap();
+    loadAuthAndBootstrap();
   }, []);
+
+  // Close menus on outside click
+  useEffect(() => {
+    function handleClickOutside() {
+      setIsUserMenuOpen(false);
+      setIsTenantMenuOpen(false);
+    }
+    if (isUserMenuOpen || isTenantMenuOpen) {
+      window.addEventListener('click', handleClickOutside);
+      return () => window.removeEventListener('click', handleClickOutside);
+    }
+  }, [isUserMenuOpen, isTenantMenuOpen]);
+
+  const handleAuthSuccess = (user: UserProfile, organization: OrganizationTenant) => {
+    setCurrentUser(user);
+    setActiveOrg(organization);
+    setIsAuthenticated(true);
+    setOrganizations((prev) => {
+      const exists = prev.some((o) => o.id === organization.id);
+      return exists ? prev : [organization, ...prev];
+    });
+    setUsers((prev) => {
+      const exists = prev.some((u) => u.id === user.id);
+      return exists ? prev : [user, ...prev];
+    });
+  };
+
+  const handleSelectPersona = async (persona: DemoEnterprisePersona) => {
+    setIsUserMenuOpen(false);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ personaId: persona.id }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUser(data.user);
+        setActiveOrg(data.organization);
+        setIsAuthenticated(true);
+        const bootRes = await fetch(`/api/bootstrap?tenantId=${data.organization.id}`);
+        if (bootRes.ok) {
+          const bootData = await bootRes.json();
+          if (bootData.knowledgeDocuments) setKnowledgeDocuments(bootData.knowledgeDocuments);
+          if (bootData.scenarios) setScenarios(bootData.scenarios);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to switch persona:', e);
+    }
+  };
+
+  const handleSelectTenant = async (tenant: OrganizationTenant) => {
+    setActiveOrg(tenant);
+    setIsTenantMenuOpen(false);
+    try {
+      await fetch('/api/auth/switch-tenant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ organizationId: tenant.id }),
+      });
+      const res = await fetch(`/api/bootstrap?tenantId=${tenant.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.knowledgeDocuments) setKnowledgeDocuments(data.knowledgeDocuments);
+        if (data.scenarios) setScenarios(data.scenarios);
+      }
+    } catch (e) {
+      console.error('Failed to switch tenant:', e);
+    }
+  };
+
+  const handleLogout = async () => {
+    setIsUserMenuOpen(false);
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (e) {
+      console.error('Logout error:', e);
+    }
+    setCurrentUser(null);
+    setIsAuthenticated(false);
+  };
 
   const handleStartSimulation = async (scenario: ScenarioDefinition) => {
     setIsStartingSessionId(scenario.id);
@@ -110,7 +227,7 @@ export default function MiraStudioPlatformPage() {
         body: JSON.stringify({
           scenarioId: scenario.id,
           organizationId: activeOrg.id,
-          userId: users[0]?.id || 'usr-sales-vp',
+          userId: currentUser?.id || users[0]?.id || 'usr-sales-vp',
         }),
       });
       const data = await response.json();
@@ -172,28 +289,96 @@ export default function MiraStudioPlatformPage() {
     <div className="min-h-screen flex flex-col bg-light-surface text-light-on-surface">
       {/* STRICT 3-ZONE TOP BAR CONTRACT — STITCH CORPORATE STYLE */}
       <header className="bg-light-surface-container-lowest border-b border-light-outline-variant px-6 py-3 flex items-center justify-between gap-6 sticky top-0 z-30 shadow-xs backdrop-blur-md">
-        {/* Zone 1: Single text element wordmark + Aviation / Simulation Mark */}
-        <button
-          onClick={() => setActiveView('landing')}
-          className="flex items-center gap-3 text-left cursor-pointer group"
-        >
-          <div className="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center font-bold text-sm shadow-xs group-hover:bg-light-primary-container transition-colors">
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">flight_takeoff</span>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="font-headline text-lg font-bold text-light-on-surface tracking-tight">
-                MiraStudio
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-light-secondary-container text-light-on-secondary-container font-mono text-[11px] font-semibold">
-                Simulateur B2B
-              </span>
+        {/* Zone 1: Wordmark + Aviation Mark + Interactive Tenant Switcher */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setActiveView('landing')}
+            className="flex items-center gap-3 text-left cursor-pointer group"
+          >
+            <div className="w-8 h-8 rounded bg-light-primary text-light-on-primary flex items-center justify-center font-bold text-sm shadow-xs group-hover:bg-light-primary-container transition-colors">
+              <span className="material-symbols-outlined text-lg" aria-hidden="true">flight_takeoff</span>
             </div>
-            <span className="text-[11px] text-light-on-surface-variant font-medium">
-              Tenant : {activeOrg.name.split(' (')[0]}
-            </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="font-headline text-lg font-bold text-light-on-surface tracking-tight">
+                  MiraStudio
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-light-secondary-container text-light-on-secondary-container font-mono text-[11px] font-semibold">
+                  Simulateur B2B
+                </span>
+              </div>
+            </div>
+          </button>
+
+          {/* Interactive Tenant Switcher Pill */}
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsTenantMenuOpen(!isTenantMenuOpen);
+                setIsUserMenuOpen(false);
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-light-surface-container-low hover:bg-light-surface-container border border-light-outline-variant text-[11px] text-light-on-surface font-medium transition-colors cursor-pointer"
+              title="Changer d'organisation ou de tenant RLS"
+            >
+              <Building className="w-3.5 h-3.5 text-light-primary shrink-0" />
+              <span className="max-w-[150px] sm:max-w-[180px] truncate">{activeOrg.name.split(' (')[0]}</span>
+              <ChevronDown className={`w-3 h-3 text-light-on-surface-variant transition-transform ${isTenantMenuOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Tenant Dropdown Menu */}
+            {isTenantMenuOpen && (
+              <div
+                className="absolute left-0 mt-2 w-72 bg-light-surface-container-lowest rounded-xl shadow-xl border border-light-outline-variant p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-light-on-surface-variant font-bold flex items-center justify-between">
+                  <span>Organisations (Tenants RLS)</span>
+                  <span className="text-light-primary font-mono">{organizations.length}</span>
+                </div>
+                <div className="space-y-1 mt-1">
+                  {organizations.map((org) => {
+                    const isSelected = org.id === activeOrg.id;
+                    return (
+                      <button
+                        key={org.id}
+                        onClick={() => handleSelectTenant(org)}
+                        className={`w-full text-left px-2.5 py-2 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                          isSelected
+                            ? 'bg-light-secondary-container/40 text-light-primary font-bold'
+                            : 'hover:bg-light-surface-container text-light-on-surface'
+                        }`}
+                      >
+                        <div className="min-w-0 pr-2">
+                          <div className="truncate font-medium">{org.name.split(' (')[0]}</div>
+                          <div className="text-[10px] text-light-on-surface-variant font-mono">
+                            {org.planTier} · {org.activeUsersCount} utilisateurs
+                          </div>
+                        </div>
+                        {isSelected && <Check className="w-4 h-4 text-light-primary shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-2 pt-2 border-t border-light-outline-variant">
+                  <button
+                    onClick={() => {
+                      setIsTenantMenuOpen(false);
+                      setAuthModalMode('register');
+                      setAuthTargetFeature('Création de Tenant Isolé');
+                      setIsAuthModalOpen(true);
+                    }}
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-semibold text-light-primary hover:bg-light-surface-container flex items-center gap-2 cursor-pointer transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">add_business</span>
+                    <span>+ Déployer un nouveau Tenant</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </button>
+        </div>
 
         {/* Zone 2: Clean single-line text navigation links */}
         <nav className="hidden md:flex items-center gap-1.5 text-xs font-semibold">
@@ -230,8 +415,152 @@ export default function MiraStudioPlatformPage() {
           })}
         </nav>
 
-        {/* Zone 3: 1 primary action */}
+        {/* Zone 3: User Auth Capsule + Primary Action */}
         <div className="flex items-center gap-3 shrink-0">
+          {/* User Profile or Login Trigger */}
+          {currentUser ? (
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsUserMenuOpen(!isUserMenuOpen);
+                  setIsTenantMenuOpen(false);
+                }}
+                className="flex items-center gap-2 p-1.5 pr-2.5 rounded-lg hover:bg-light-surface-container border border-light-outline-variant bg-light-surface-container-low transition-colors cursor-pointer group"
+                title="Gérer votre profil et vos rôles B2B"
+              >
+                <div className="w-7 h-7 rounded-full bg-light-primary text-light-on-primary font-bold text-[11px] flex items-center justify-center shrink-0 relative">
+                  {currentUser.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()}
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white" />
+                </div>
+                <div className="hidden sm:flex flex-col text-left leading-tight">
+                  <span className="text-xs font-bold text-light-on-surface group-hover:text-light-primary transition-colors">
+                    {currentUser.name}
+                  </span>
+                  <span className="text-[10px] text-light-on-surface-variant font-mono">
+                    {currentUser.role}
+                  </span>
+                </div>
+                <ChevronDown className={`w-3.5 h-3.5 text-light-on-surface-variant transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* User Dropdown Menu */}
+              {isUserMenuOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-80 bg-light-surface-container-lowest rounded-xl shadow-xl border border-light-outline-variant p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Current User Card */}
+                  <div className="p-3 rounded-lg bg-light-surface-container-low border border-light-outline-variant space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-light-on-surface">{currentUser.name}</span>
+                      <span className="px-2 py-0.5 rounded text-[9px] font-semibold bg-light-primary/10 text-light-primary border border-light-primary/30">
+                        {currentUser.role}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-light-on-surface-variant font-mono">{currentUser.email}</div>
+                    <div className="text-[10px] text-light-on-surface-variant flex items-center gap-1 pt-1">
+                      <Building className="w-3 h-3 text-light-primary" />
+                      <span className="truncate">{activeOrg.name.split(' (')[0]}</span>
+                    </div>
+                  </div>
+
+                  {/* 1-Click Persona Switcher */}
+                  <div className="mt-3 space-y-1.5">
+                    <div className="px-1 text-[10px] font-mono uppercase tracking-wider text-light-on-surface-variant font-bold flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-light-primary" />
+                      <span>Tester un Persona B2B (Démo 1-Clic)</span>
+                    </div>
+
+                    <div className="space-y-1">
+                      {DEMO_ENTERPRISE_PERSONAS.map((p) => {
+                        const isCurrent = currentUser?.id === p.userId || currentUser?.email === p.email;
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => handleSelectPersona(p)}
+                            className={`w-full text-left p-2 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                              isCurrent
+                                ? 'bg-light-secondary-container/40 text-light-primary font-bold'
+                                : 'hover:bg-light-surface-container text-light-on-surface'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="w-5 h-5 rounded-full bg-light-primary/10 text-light-primary text-[10px] font-bold flex items-center justify-center shrink-0">
+                                {p.avatarText}
+                              </span>
+                              <div className="truncate">
+                                <div className="font-semibold text-xs truncate">{p.name}</div>
+                                <div className="text-[10px] text-light-on-surface-variant font-mono truncate">{p.role}</div>
+                              </div>
+                            </div>
+                            {isCurrent && <Check className="w-4 h-4 text-light-primary shrink-0" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Actions Divider */}
+                  <div className="mt-3 pt-2 border-t border-light-outline-variant space-y-1">
+                    <button
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                        setAuthModalMode('register');
+                        setAuthTargetFeature('Créer un Espace Entreprise');
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-light-primary hover:bg-light-surface-container flex items-center gap-2 cursor-pointer transition-colors"
+                    >
+                      <Building className="w-3.5 h-3.5 text-light-primary" />
+                      <span>Créer un nouvel espace entreprise</span>
+                    </button>
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer transition-colors"
+                    >
+                      <LogOut className="w-3.5 h-3.5 text-red-600" />
+                      <span>Se déconnecter</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setAuthModalMode('login');
+                  setAuthTargetFeature(undefined);
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-3 py-1.5 text-xs font-semibold text-light-on-surface hover:text-light-primary hover:bg-light-surface-container rounded-lg border border-light-outline-variant transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Lock className="w-3.5 h-3.5 text-light-primary" />
+                <span>Connexion</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setAuthModalMode('register');
+                  setAuthTargetFeature('Création de compte entreprise');
+                  setIsAuthModalOpen(true);
+                }}
+                className="hidden sm:flex px-3 py-1.5 text-xs font-semibold text-light-on-surface-variant hover:text-light-on-surface hover:bg-light-surface-container rounded-lg transition-colors items-center gap-1.5 cursor-pointer"
+              >
+                <Building className="w-3.5 h-3.5" />
+                <span>Créer un Espace</span>
+              </button>
+            </div>
+          )}
+
+          {/* Primary Action Button */}
           <button
             onClick={() => {
               if (activeSession && activeSession.status === 'active') {
@@ -265,6 +594,10 @@ export default function MiraStudioPlatformPage() {
             onNavigateToStudio={() => setActiveView('studio')}
             onNavigateToArchitecture={() => setActiveView('architecture')}
             onNavigateToPricing={() => setActiveView('pricing')}
+            onOpenAuth={(mode) => {
+              setAuthModalMode(mode || 'login');
+              setIsAuthModalOpen(true);
+            }}
             scenarios={scenarios}
             activeOrg={activeOrg}
           />
@@ -687,6 +1020,11 @@ export default function MiraStudioPlatformPage() {
             onStartSimulation={handleStartSimulation}
             onNavigateToCatalog={() => setActiveView('catalog')}
             onNavigateToArchitecture={() => setActiveView('architecture')}
+            onOpenAuth={(mode, planTier) => {
+              setAuthModalMode(mode || 'register');
+              setAuthTargetFeature(planTier ? `Souscription Formule ${planTier}` : undefined);
+              setIsAuthModalOpen(true);
+            }}
             flagshipScenario={scenarios[0]}
           />
         )}
@@ -756,6 +1094,15 @@ export default function MiraStudioPlatformPage() {
           </button>
         </div>
       </footer>
+
+      {/* AUTHENTICATION & MULTI-TENANT MODAL */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+        initialMode={authModalMode}
+        targetFeatureLabel={authTargetFeature}
+      />
     </div>
   );
 }

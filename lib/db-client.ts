@@ -78,6 +78,15 @@ export class DatabaseRepository {
     return org ? { ...org } : null;
   }
 
+  public async createOrganization(org: OrganizationTenant): Promise<OrganizationTenant> {
+    const store = getStore();
+    const exists = store.organizations.some((o) => o.id === org.id || o.slug === org.slug);
+    if (!exists) {
+      store.organizations.push(org);
+    }
+    return org;
+  }
+
   // --- USERS (RBAC) ---
   public async getUsers(organizationId?: string): Promise<UserProfile[]> {
     const store = getStore();
@@ -85,6 +94,36 @@ export class DatabaseRepository {
       return [...store.users];
     }
     return store.users.filter((u) => u.organizationId === organizationId);
+  }
+
+  public async getUserById(id: string): Promise<UserProfile | null> {
+    const store = getStore();
+    const user = store.users.find((u) => u.id === id || u.uid === id);
+    return user ? { ...user } : null;
+  }
+
+  public async getUserByEmail(email: string): Promise<UserProfile | null> {
+    const store = getStore();
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = store.users.find((u) => u.email.toLowerCase().trim() === normalizedEmail);
+    return user ? { ...user } : null;
+  }
+
+  public async createUser(user: UserProfile): Promise<UserProfile> {
+    const store = getStore();
+    const exists = store.users.some((u) => u.email.toLowerCase().trim() === user.email.toLowerCase().trim());
+    if (!exists) {
+      store.users.push(user);
+    }
+    return user;
+  }
+
+  public async updateUser(id: string, updates: Partial<UserProfile>): Promise<UserProfile | null> {
+    const store = getStore();
+    const index = store.users.findIndex((u) => u.id === id || u.uid === id);
+    if (index === -1) return null;
+    store.users[index] = { ...store.users[index], ...updates };
+    return store.users[index];
   }
 
   // --- KNOWLEDGE DOCUMENTS (RAG MULTI-TENANT) ---

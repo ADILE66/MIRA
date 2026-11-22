@@ -25,6 +25,7 @@ interface PricingViewProps {
   onStartSimulation: (scenario: ScenarioDefinition) => void;
   onNavigateToCatalog: () => void;
   onNavigateToArchitecture: () => void;
+  onOpenAuth?: (mode?: 'login' | 'register', planTier?: 'Enterprise' | 'WhiteLabel' | 'Growth') => void;
   flagshipScenario: ScenarioDefinition;
 }
 
@@ -32,6 +33,7 @@ export default function PricingView({
   onStartSimulation,
   onNavigateToCatalog,
   onNavigateToArchitecture,
+  onOpenAuth,
   flagshipScenario,
 }: PricingViewProps) {
   const [billingCycle, setBillingCycle] = useState<'annual' | 'monthly'>('annual');
@@ -335,7 +337,13 @@ export default function PricingView({
                 <div className="pt-8 mt-6 border-t border-light-outline-variant">
                   {plan.id === 'enterprise' ? (
                     <button
-                      onClick={onNavigateToArchitecture}
+                      onClick={() => {
+                        if (onOpenAuth) {
+                          onOpenAuth('register', 'WhiteLabel');
+                        } else {
+                          onNavigateToArchitecture();
+                        }
+                      }}
                       className="w-full py-3.5 px-4 rounded-xl text-xs font-bold text-light-on-surface bg-light-surface-container-low hover:bg-light-surface-container border border-light-outline-variant transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                     >
                       <Building2 className="w-4 h-4 text-light-primary" />
@@ -343,7 +351,13 @@ export default function PricingView({
                     </button>
                   ) : (
                     <button
-                      onClick={() => onStartSimulation(flagshipScenario)}
+                      onClick={() => {
+                        if (onOpenAuth) {
+                          onOpenAuth('register', plan.id === 'business' ? 'Enterprise' : 'Growth');
+                        } else {
+                          onStartSimulation(flagshipScenario);
+                        }
+                      }}
                       className={`w-full py-3.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-98 ${
                         plan.highlight
                           ? 'bg-light-primary hover:bg-[#1B4396] text-white'

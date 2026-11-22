@@ -53,6 +53,14 @@ export const INITIAL_USERS: UserProfile[] = [
     role: 'Consultant / Coach',
     organizationId: 'org-toubkal-advisory',
   },
+  {
+    id: 'usr-candidate-amina',
+    uid: 'firebase-uid-candidate-amina',
+    name: 'Amina Bennani',
+    email: 'a.bennani@candidat.ma',
+    role: 'Candidat / Apprenant',
+    organizationId: 'org-atlas-holding',
+  },
 ];
 
 export const INITIAL_KNOWLEDGE_DOCUMENTS: KnowledgeDocument[] = [

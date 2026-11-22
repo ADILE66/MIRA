@@ -38,6 +38,7 @@ interface LandingPageViewProps {
   onNavigateToStudio: () => void;
   onNavigateToArchitecture: () => void;
   onNavigateToPricing?: () => void;
+  onOpenAuth?: (mode?: 'login' | 'register') => void;
   scenarios: ScenarioDefinition[];
   activeOrg: OrganizationTenant;
 }
@@ -48,6 +49,7 @@ export default function LandingPageView({
   onNavigateToStudio,
   onNavigateToArchitecture,
   onNavigateToPricing,
+  onOpenAuth,
   scenarios,
   activeOrg,
 }: LandingPageViewProps) {
@@ -207,6 +209,16 @@ export default function LandingPageView({
               <Sparkles className="w-4 h-4 text-success" />
               <span>Créer un scénario RAG (30s)</span>
             </button>
+
+            {onOpenAuth && (
+              <button
+                onClick={() => onOpenAuth('register')}
+                className="px-5 py-4 text-xs font-semibold text-light-on-surface-variant hover:text-light-on-surface hover:bg-light-surface-container rounded-lg transition-colors flex items-center gap-2 cursor-pointer border border-dashed border-light-outline-variant"
+              >
+                <Building2 className="w-4 h-4 text-light-primary" />
+                <span>Déployer un Espace Entreprise</span>
+              </button>
+            )}
           </div>
 
           {/* 4 Trust Metrics Strip */}
