@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     };
 
     const hasCookie = Boolean(req.cookies.get(SESSION_COOKIE_NAME)?.value);
-    const isAuthenticated = auth.tokenType === 'cookie_session' || auth.tokenType === 'supabase_jwt' || hasCookie;
+    const isAuthenticated = auth.tokenType === 'cookie_session' || auth.tokenType === 'bearer_jwt' || hasCookie;
 
     return NextResponse.json({
       isAuthenticated,

@@ -160,7 +160,7 @@ export default function ArchitectureBlueprintView({
           <div className="space-y-1">
             <h2 className="text-base font-bold text-light-on-surface font-headline flex items-center gap-2">
               <Database className="w-4 h-4 text-light-primary" />
-              <span>02. Schéma Relationnel Multi-Tenant PostgreSQL / Supabase / Drizzle ORM</span>
+              <span>02. Schéma Relationnel Multi-Tenant PostgreSQL / Drizzle ORM (Isolation RLS)</span>
             </h2>
             <p className="text-xs text-light-on-surface-variant">
               Script SQL complet prêt pour le déploiement en production avec

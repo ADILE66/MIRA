@@ -2,7 +2,7 @@
  * SCHÉMA MULTI-TENANT POSTGRESQL (DRIZZLE ORM REFERENCE & ARCHITECTURE CONTRACT)
  *
  * Ce fichier formalise le schéma relationnel B2B multi-tenant tel que conçu
- * pour PostgreSQL / Supabase / Cloud SQL avec Drizzle ORM :
+ * pour PostgreSQL / Cloud SQL Souverain avec Drizzle ORM :
  * - organizations (Tenants B2B & Marque Blanche)
  * - users (Comptes liés à l'UID d'authentification et rôles RBAC)
  * - knowledge_documents (Base documentaire RAG et chunks JSONB)
@@ -11,7 +11,7 @@
  */
 
 export const POSTGRES_MULTI_TENANT_DDL = `-- ============================================================================
--- MIRASTUDIO B2B — SCHÉMA POSTGRESQL MULTI-TENANT (DRIZZLE ORM / SUPABASE)
+-- MIRASTUDIO B2B — SCHÉMA POSTGRESQL MULTI-TENANT (DRIZZLE ORM / RLS NATIVE)
 -- ============================================================================
 
 CREATE TYPE module_type AS ENUM ('upskilling', 'business_game', 'recruitment', 'onboarding');

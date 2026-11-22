@@ -21,7 +21,7 @@ export interface AuthContext {
   organizationId: string;
   isSuperAdmin: boolean;
   tenantSlug?: string;
-  tokenType: 'supabase_jwt' | 'nextauth_session' | 'tenant_header_dev' | 'cookie_session';
+  tokenType: 'bearer_jwt' | 'cookie_session' | 'tenant_header_dev';
 }
 
 export interface DemoEnterprisePersona {
@@ -155,7 +155,7 @@ export function verifySessionToken(token: string): SessionPayload | null {
  * Resolves the authenticated user and tenant context from request headers/cookies.
  * Priority:
  * 1. mirastudio-session HTTP-only / standard cookie
- * 2. Supabase Auth / NextAuth Bearer token in Authorization header
+ * 2. Enterprise Bearer JWT token in Authorization header
  * 3. x-tenant-id / x-user-id headers (for B2B API integrations and development fallback)
  */
 export function resolveAuthContext(req: NextRequest): AuthContext {
@@ -190,7 +190,7 @@ export function resolveAuthContext(req: NextRequest): AuthContext {
     }
   }
 
-  // 2. Supabase / NextAuth JWT inspection if present in Authorization header
+  // 2. Enterprise Bearer JWT inspection if present in Authorization header
   const authHeader = req.headers.get('authorization');
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
@@ -243,7 +243,7 @@ export function resolveAuthContext(req: NextRequest): AuthContext {
           },
           organizationId: orgId,
           isSuperAdmin: role === 'admin' || payload.is_super_admin === true,
-          tokenType: 'supabase_jwt',
+          tokenType: 'bearer_jwt',
         };
       }
     } catch {
